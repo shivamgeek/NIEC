@@ -1,13 +1,14 @@
-package com.database;
-
+package com.entity;
+import com.database.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.HashMap;
 
 public class decodingStudent {
-
-	String rollToHex(String roll){   //01215602713 --> 0C11
+	
+	
+	public String rollToHex(String roll) throws Exception{   //01215602713 --> 0C11
 
 
 		String branch=roll.substring(3,6),sno=roll.substring(0,3),
@@ -26,7 +27,7 @@ public class decodingStudent {
 		return hex;
 	}
 	
-	String hexToRoll(String hex){  //  0C11-->01215602713
+	public 	String hexToRoll(String hex) throws Exception{  //  0C11-->01215602713
 
 
 		String hex_sno=hex.substring(0,2),hex_branch=hex.substring(2, 3),hex_year=hex.substring(3, 4);String collegeCode="027";
@@ -45,7 +46,7 @@ public class decodingStudent {
 		return temp;
 	}
 	
-	void decodeStudentList(String list,Boolean friends,student s,HashMap<String,String> hm) throws ClassNotFoundException, SQLException{  
+	public void decodeStudentList(String list,Boolean friends,student s,HashMap<String,String> hm) throws Exception,ClassNotFoundException, SQLException{  
 		//true--> class friends false--> other friends
 		String hexcode;
 		ResultSet rs;
@@ -77,23 +78,25 @@ public class decodingStudent {
 	
 //*******************EXTRACT VALUES FROM ROLL NO
 	
-	int findSnoFromRoll(String roll){   //01215602713 --> 012
+	public int findSnoFromRoll(String roll) throws Exception{   //01215602713 --> 012
 		return Integer.parseInt(roll.substring(0,3));
 	}
 	
 
-	int findBranchFromRoll(String roll){ //01215602713 --> 156
+	public int findBranchFromRoll(String roll)throws Exception{ //01215602713 --> 156
+	
 		return Integer.parseInt(roll.substring(3,6));
+		
 	}
 	
 
-	int findYearFromRoll(String roll){    //01215602713 --> 13
+	public int findYearFromRoll(String roll) throws Exception{    //01215602713 --> 13
 
 		return Integer.parseInt(roll.substring(9,11));
 	}
 	
 
-	int findYearCode(int year){ // 13 --> 3+1 --> 4--> 4%4 --> 0 
+	public int findYearCode(int year) throws Exception{ // 13 --> 3+1 --> 4--> 4%4 --> 0 
 
 		/*Calendar cal=Calendar.getInstance();  //DECODING
 		int currentYear=cal.get(Calendar.YEAR);*/
@@ -103,7 +106,7 @@ public class decodingStudent {
 	
 	}
 	
-	int findYearFromCode(int code){  // 0 --> 13  
+	public int findYearFromCode(int code) throws Exception{  // 0 --> 13  
 
 
 		Calendar cal=Calendar.getInstance();  
@@ -121,7 +124,7 @@ public class decodingStudent {
 	}
 	
 //******************BRANCH*****************
-	int branchCode(int branch){  //156 -->1
+	public int branchCode(int branch) throws Exception{  //156 -->1
 		int code=0;
 		switch(branch){    //MAPS BRANCH CODES TO SINGLE DIGIT INTEGER VALUES
 		case 156:{
@@ -158,7 +161,7 @@ public class decodingStudent {
 	}
 	
 	
-	String branchName(int branch){  //156-->CSE
+	public String branchName(int branch) throws Exception{  //156-->CSE
 
 		String branchVal=null;
 		switch(branch){    
@@ -195,7 +198,7 @@ public class decodingStudent {
 		
 	}
 	
-	int branchCodeToNumber(int code){  //1 --> 156
+	public int branchCodeToNumber(int code) throws Exception{  //1 --> 156
 
 		int branch=0;
 		switch(code){    

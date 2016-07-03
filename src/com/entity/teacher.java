@@ -1,12 +1,12 @@
-package com.database;
-
+package com.entity;
+import com.database.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class teacher {
 
-	String t_id,t_name,t_branch,t_phone,t_email,t_studentList,t_teacherList,t_classes,
-	    t_pendingList,t_sentList,t_aboutMe,t_gender,t_password;
+	public String t_id,t_name,t_password,t_branch,t_phone,t_classes,t_email,t_gender,t_studentList,t_teacherList,
+	    t_pendingList,t_sentList,t_aboutMe;
 	//Image t_profilePic;      //T_ID is a 4 digit code starting with 1,2 or 3 |'s. eg.--> |||1, ||24, |224.
 	achievementDatabase acd;
 	teacherDatabase td;
@@ -15,7 +15,7 @@ public class teacher {
 	studentDatabase sd;
 	
 	
-	public teacher(String t_id) throws ClassNotFoundException, SQLException{
+	public teacher(String t_id) throws Exception{
 		sd=new studentDatabase();
 		acd=new achievementDatabase();
 		nd=new noticeDatabase();
@@ -39,12 +39,12 @@ public class teacher {
 		
 	}
 	
-	void addAchievment(String content,String roll) throws SQLException{
+	public void addAchievment(String content,String roll) throws SQLException{
 		acd.addAchievement(content,t_id,roll);
 	}
 	
 	
-	void acceptFriendRequest(String id) throws SQLException{
+	public void acceptFriendRequest(String id) throws Exception{
 		if(id.charAt(0)=='|'){
 			td.removePendingList(t_id,id);	
 			td.removeSentList(id,t_id);
@@ -61,7 +61,7 @@ public class teacher {
 	
 	
 // ID WILL BE ROLL NO FOR SENDING REQUEST TO STUDENT, OTHERWISE WILL BE TEACHER ID.
-	void sendFriendRequest(String id) throws SQLException{ 
+	public void sendFriendRequest(String id) throws Exception{ 
  
 		if(id.charAt(0)=='|'){
 		td.addSentList(t_id,id);

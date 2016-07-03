@@ -1,12 +1,12 @@
-package com.database;
+package com.entity;
 import java.sql.*;
 
 import java.util.HashMap;
-
+import com.database.*;
 public class student {
 
-	String s_roll,s_name,s_branch,s_section,s_semester,s_address,s_phone,
-	s_password,s_email,s_hexcode,s_otherFriendList,s_teacherList,s_pendingList,s_sentList,s_aboutMe,s_gender,s_society;
+	public String s_roll,s_name,s_password,s_branch,s_section,s_semester,s_address,s_phone,
+	s_email,s_gender,s_hexcode,s_otherFriendList,s_teacherList,s_pendingList,s_sentList,s_aboutMe,s_society;
 	//Image s_profilePic;
 	decodingStudent ds;
 	studentDatabase sd;
@@ -16,7 +16,7 @@ public class student {
 	marksDatabase md;
 	teacherDatabase td;
 	
-	student(String s_roll) throws SQLException, ClassNotFoundException{
+	public student(String s_roll) throws Exception{
 		 sd=new studentDatabase();
 		 acd=new achievementDatabase();
 		 td=new teacherDatabase();
@@ -45,11 +45,11 @@ public class student {
 		
 	}
 	
-	void showAchievment() throws SQLException{
+	public void showAchievment() throws SQLException{
 		acd.showAchievment(s_roll);
 	}
 	
-	void showFriends() throws ClassNotFoundException, SQLException{
+	public void showFriends() throws Exception{
 		
 		HashMap<String,String> hm=new HashMap<String,String>();
 		String list=sd.fetchClassFriendList(s_roll,s_branch,s_section);
@@ -61,7 +61,7 @@ public class student {
 	
 	
 	//WHILE CALLING THIS FUNCTION FOR TEACHER PASS T_ID AS FRIENDROLL
-	void sendFriendRequest(String friendRoll) throws SQLException{  
+	public void sendFriendRequest(String friendRoll) throws Exception{  
 		if(friendRoll.charAt(0)=='|'){
 			//friendRoll=||24
 			sd.insertSentList(s_roll,friendRoll,s_branch);   //for sending request to a teacher
@@ -77,7 +77,7 @@ public class student {
 	}
 	
 	
-	void acceptFriendRequest(String friendRoll) throws SQLException, ClassNotFoundException{
+	public void acceptFriendRequest(String friendRoll) throws Exception{
 		if(friendRoll.charAt(0)=='|'){
 			//friendRoll=||24
 			sd.removeSentList(friendRoll,s_hexcode, ds.branchName(ds.findBranchFromRoll(friendRoll)));
@@ -98,7 +98,7 @@ public class student {
 	}
 	
 	
-	void showMarks(student s,String sem) throws SQLException{   //?1?12#12#23#23#45#?2?12#12#23#23#45#?3?12#12#23#23#45#?4?12#12#23#
+	public void showMarks(student s,String sem) throws SQLException{   //?1?12#12#23#23#45#?2?12#12#23#23#45#?3?12#12#23#23#45#?4?12#12#23#
 		
 		if(Integer.parseInt(sem)<=Integer.parseInt(s_semester)){  
 			String marks=md.showMarksCode(s_roll,s_branch);
