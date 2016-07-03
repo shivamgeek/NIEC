@@ -16,23 +16,24 @@ public class student {
 	marksDatabase md;
 	teacherDatabase td;
 	
-	public student(String s_roll) throws Exception{
+	public student(String roll) throws Exception{
+		
 		 sd=new studentDatabase();
 		 acd=new achievementDatabase();
 		 td=new teacherDatabase();
 		 md=new marksDatabase();
 		ad=new academicsDatabase(); 
 		ds=new decodingStudent();
-		ResultSet rs=sd.fetchAll(s_roll,ds.branchName(ds.findBranchFromRoll(s_roll)));
+		ResultSet rs=sd.fetchAll(roll,ds.branchName(ds.findBranchFromRoll(roll)));
 		s_roll=rs.getString("S_ROLL");
 		s_name=rs.getString("S_NAME");
 		s_branch=rs.getString("S_BRANCH");
 		s_phone=rs.getString("S_PHONE");
-		s_password=rs.getString("S_PASSSWORD");
+		s_password=rs.getString("S_PASSWORD");
 		s_email=rs.getString("S_EMAIL");
 		s_pendingList=rs.getString("S_PENDINGLIST");	
 		s_sentList=rs.getString("S_SENTLIST");	
-		s_aboutMe=rs.getString("S_ABOUT ME");
+		s_aboutMe=rs.getString("S_ABOUTME");
 		s_gender=rs.getString("S_GENDER");
 		s_section=rs.getString("S_SECTION");
 		s_semester=rs.getString("S_SEMESTER");
@@ -41,7 +42,7 @@ public class student {
 		s_otherFriendList=rs.getString("S_OTHERFRIENDLIST");
 		s_teacherList=rs.getString("S_TEACHERLIST");
 		s_society=rs.getString("S_SOCIETY");
-	
+		//System.out.println("student constructor "+s_roll);
 		
 	}
 	
@@ -49,13 +50,17 @@ public class student {
 		acd.showAchievment(s_roll);
 	}
 	
-	public void showFriends() throws Exception{
+	public HashMap<String,String> showFriends() throws Exception{
 		
 		HashMap<String,String> hm=new HashMap<String,String>();
+		System.out.println("Roll- "+s_roll);
 		String list=sd.fetchClassFriendList(s_roll,s_branch,s_section);
+		System.out.println("Roll- "+s_roll);
 	    ds.decodeStudentList(list,true,this,hm);
 		list=sd.fetchOtherFriendList(s_roll,s_branch);
+		System.out.println("friendList- "+list);
 		 ds.decodeStudentList(list,false,this,hm);
+		 return hm;
 		}
 	
 	
@@ -125,20 +130,14 @@ public class student {
 		}
 		
 	}
-	
-	/*void subjectCode(student s,String sem) throws SQLException{
-		ResultSet rs=ad.getSubjects(s,sem);
-		String subName=rs.getString("SUBJECTS");
-		String subCode=rs.getString("SUBJECTCODES");
-	    String subjects[]=subName.split("#");
-	    String codes[]=subCode.split("#");
-	   for(int i=0;i<subjects.length;i++){
-	    	System.out.println("SUBJECT--> "+subjects[i]+" CODE--> "+codes[i]);
-	    }
+	 
+	void showTeachers(){
+		
+		
+		
+		
 		
 	}
-	*/
-	
 	
 	
 	

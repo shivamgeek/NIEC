@@ -30,6 +30,11 @@ CREATE TABLE RESULT_MEC(ROLL VARCHAR(20), MARKS VARCHAR(200));
 CREATE TABLE CLASSINFO(S_BRANCH VARCHAR(5),S_SECTION VARCHAR(5),S_CLASSFRIENDS VARCHAR(300));
 
 
+alter table TEACHER add SNO int(5) auto_increment primary key;
+select * from TEACHER;
+alter table TEACHER auto_increment=100;
+select SNO from TEACHER order by SNO desc limit 1;
+alter table SOCIETY modify ID int(5) auto_increment;
 
 
 

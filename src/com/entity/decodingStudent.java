@@ -8,7 +8,7 @@ import java.util.HashMap;
 public class decodingStudent {
 	
 	
-	public String rollToHex(String roll) throws Exception{   //01215602713 --> 0C11
+	public String rollToHex(String roll) throws Exception{   //01215602713 --> 0C10
 
 
 		String branch=roll.substring(3,6),sno=roll.substring(0,3),
@@ -56,6 +56,7 @@ public class decodingStudent {
 			for(int i=0;i<list.length();i=i+4){
 					hexcode=list.substring(i,i+4);
 					rs=sd.fetchNameRoll(hexcode,s.s_branch);
+					rs.next();
 					hm.put(rs.getString("S_ROLL"),rs.getString("S_NAME"));
 			}
 		}

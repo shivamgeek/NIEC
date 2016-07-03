@@ -2,6 +2,8 @@ package com.database;
 
 
 import java.sql.*;
+import java.util.HashMap;
+
 import com.entity.*;
 
 public class studentDatabase {
@@ -9,12 +11,16 @@ public class studentDatabase {
 	Connection con;
 	//Statement smt;
 	PreparedStatement pst;
+	teacherDatabase td;
+	societyDatabase sd;
 	
 	public studentDatabase() throws Exception,ClassNotFoundException{
 		Class.forName("com.mysql.jdbc.Driver");
 		ds=new decodingStudent();
 		con=DriverManager.getConnection("jdbc:mysql://localhost:3306/DBNIEC","root","s");
 		//smt=con.createStatement();
+		td=new teacherDatabase();
+		sd=new societyDatabase();
 	}
 
 	
@@ -22,10 +28,11 @@ public class studentDatabase {
 //**********************SELECT***********************
 	
 	public ResultSet fetchAll(String roll,String branch) throws SQLException{
-
+		//System.out.println("fetchAll student "+roll);
 	pst=con.prepareStatement("select * from STUDENT_"+branch+" where S_ROLL=?");  //add concatenation to student - csse
 		pst.setString(1,roll);
 		ResultSet rs=pst.executeQuery();
+		rs.next();
 		return rs;
 	}
 	
@@ -33,8 +40,13 @@ public class studentDatabase {
 
 		pst=con.prepareStatement("select S_OTHERFRIENDLIST from STUDENT_"+branch+" where S_ROLL=?");
 		pst.setString(1,roll);
+		System.out.println("Roll2- "+roll);
 		ResultSet rs=pst.executeQuery();
-		String list =rs.getString("S_OTHERFRIENDLIST");
+		String list="";
+		if(rs.next()){
+		 list =rs.getString("S_OTHERFRIENDLIST");
+		}
+		System.out.println("friendList is- "+list);
 		return list;
 	}
 	
@@ -43,6 +55,7 @@ public class studentDatabase {
 			pst=con.prepareStatement("select S_NAME,S_ROLL from STUDENT_"+branch+" where S_HEXCODE=?");
 			pst.setString(1,hex);
 			ResultSet rs=pst.executeQuery();
+			rs.next();
 			return rs;
 		
 	}
@@ -59,12 +72,38 @@ public class studentDatabase {
 		return false;
 	}
 	
-	public String fetchTeacherList(String roll,String branch) throws SQLException{
+	public HashMap<String,String> fetchTeacherList(String roll,String branch) throws SQLException{
+		pst=con.prepareStatement("select S_TEACHERLIST from STUDENT_"+branch+" where S_ROLL=?");
+		pst.setString(1, roll);
+		HashMap<String,String> hm=new HashMap<String,String>();
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		String tchr= rs.getString("S_TEACHERLIST");
+		System.out.println("TeacherList in Student "+tchr);
+		String temp="";
+		ResultSet rs1;
+		System.out.println("before loop");
+		for(int i=0;i<tchr.length();i=i+4){
+			System.out.println("inside loop");
+			temp=tchr.substring(i,i+4);
+			rs1=td.fetchAll(temp);
+			System.out.println("ID IS "+rs1.getString("T_ID"));
+			hm.put(rs1.getString("T_ID"),rs1.getString("T_NAME"));
+		}
+		System.out.println("after loop");
+		return hm;
+	}
+	
+	public String fetchTeacherList(String roll,String branch,Boolean val) throws SQLException{
 		pst=con.prepareStatement("select S_TEACHERLIST from STUDENT_"+branch+" where S_ROLL=?");
 		pst.setString(1, roll);
 		ResultSet rs=pst.executeQuery();
-		return rs.getString("S_TEACHERLIST");
+		rs.next();
+		String tchr= rs.getString("S_TEACHERLIST");
+		return tchr;
 	}
+	
+	
 	
 
 	
@@ -138,6 +177,7 @@ public class studentDatabase {
 		for(int i=1;i<=17;i++){
 			pst.setString(i,s[i-1]);
 		}
+		pst.setString(2,ds.rollToHex(s[0]));
 		int result=pst.executeUpdate();
 		System.out.println(result+" Records Affected.");
 		
@@ -190,9 +230,13 @@ public class studentDatabase {
 
 		pst=con.prepareStatement("select S_CLASSFRIENDS from CLASSINFO where S_BRANCH=? and S_SECTION=?");
 		pst.setString(1,branch);
+		System.out.println("Roll1- "+roll);
 		pst.setString(2,section);
 		ResultSet rs=pst.executeQuery();
-		String list=rs.getString("S_CLASSFRIENDS");
+		String list="";
+		if(rs.next()){
+		list=rs.getString("S_CLASSFRIENDS");
+		}
 		return list;
 		}
 	
@@ -287,7 +331,7 @@ public class studentDatabase {
 	
 	public Boolean isFriend(student s,String id) throws SQLException,Exception{
 		if(id.charAt(0)=='|'){   //TEACHER
-			String teacherList=fetchTeacherList(s.s_roll,s.s_branch);
+			String teacherList=fetchTeacherList(s.s_roll,s.s_branch,true);
 			if((teacherList.indexOf(id)==-1) || ((teacherList.indexOf(id)%4)!=0)){
 				return false;
 			}
@@ -316,6 +360,26 @@ public class studentDatabase {
 		int result=pst.executeUpdate();
 		System.out.println(result+" Records Affected.");
 	}
+	
+	public HashMap<String,String> getSociety(String roll,String branch) throws SQLException{
+		pst=con.prepareStatement("select S_SOCIETY from STUDENT_"+branch+" where S_ROLL=?");
+		HashMap<String,String> hm=new HashMap<String,String>();
+		pst.setString(1, roll); 
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		String id[]=rs.getString("S_SOCIETY").split("#");
+		for(int i=0;i<id.length;i++){
+			rs=sd.fetchAll(id[i]);
+			hm.put(rs.getString("ID"),rs.getString("NAME"));
+		}
+		return hm;
+		
+		
+	}
+	
+	
+	
+	
 	
 	
 	

@@ -8,7 +8,7 @@
 </head>
 <body>
 <form action="insertTeacher" method="GET">
-T_id: <input type="text" name="t_id">
+
 <br />
 T_Name: <input type="text" name="t_name" /><br />
 t_password<input type="text" name="t_password" /><br />
@@ -35,6 +35,7 @@ t_teacherList<input type="text" name="t_teacherList" /><br />
 t_pendingList<input type="text" name="t_pendingList" /><br />
 t_sentList<input type="text" name="t_sentList" /><br />
 t_aboutMe<input type="text" name="t_aboutMe" /><br />
+T_id: <input type="text" name="t_id"><br>
 Insert<input type="radio" name="choice" value="insert" /><br>
 Delete<input type="radio" name="choice" value="delete" /><br>
 Update<input type="radio" name="choice" value="update" /><br>

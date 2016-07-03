@@ -12,6 +12,7 @@ public class societyDatabase {
 	noticeDatabase nd;
 	Connection con;
 	PreparedStatement pst;
+	decodingStudent ds;
 	
 	public societyDatabase() throws SQLException, ClassNotFoundException{
 		nd=new noticeDatabase();
@@ -20,9 +21,9 @@ public class societyDatabase {
 	}
 	
 	public void addSociety(String s[]) throws SQLException{
-		pst=con.prepareStatement("insert into SOCIETY(ID,NAME,PASSWORD,MEMBERLIST,ABOUT,CONTACT,BRANCHLIST,TYPE)"
-	+" values(?,?,?,?,?,?,?,?)");
-		for(int i=1;i<=8;i++){
+		pst=con.prepareStatement("insert into SOCIETY(NAME,PASSWORD,MEMBERLIST,ABOUT,CONTACT,BRANCHLIST,TYPE)"
+	+" values(?,?,?,?,?,?,?)");
+		for(int i=1;i<=7;i++){
 			pst.setString(i,s[i-1]);
 		}
 		int result=pst.executeUpdate();
@@ -36,6 +37,10 @@ public class societyDatabase {
         pst.setString(2,branch+" ");
         pst.setString(3,id);
         int result=pst.executeUpdate();
+        pst=con.prepareStatement("update STUDENT_"+branch+" set S_SOCIETY=concat(S_SOCIETY,?) where S_HEXCODE=?");
+        pst.setString(1,id+"#");
+        pst.setString(2, hexcode);
+        result=pst.executeUpdate();
 		System.out.println(result+" records are affected");
 	}
 	
@@ -44,6 +49,7 @@ public class societyDatabase {
 		pst=con.prepareStatement("select MEMBERLIST,BRANCHLIST from SOCIETY where ID=?");
 		pst.setString(1,id);
 		ResultSet rs=pst.executeQuery();
+		String branch="";
 		String list=rs.getString("MEMBERLIST");
 		String blist=rs.getString("BRANCHLIST");
 		String temp="",temp1="";
@@ -51,13 +57,35 @@ public class societyDatabase {
 			if(!list.substring(i,i+4).equals(hexcode)){
 				temp=temp+list.substring(i,i+4);
 				temp1=temp1+blist.substring(i,i+4);
+			}else{
+				 branch=blist.substring(i,i+4);
 			}
+		}
 		  pst=con.prepareStatement("update SOCIETY set MEMBERLIST=?,BRANCHLIST=? where ID=?");
 			pst.setString(1,temp);
 			pst.setString(2,temp1);
 			pst.setString(3, id);
 			int result=pst.executeUpdate();
 			System.out.println(result+" Records Affected.");
+		
+			pst=con.prepareStatement("select S_SOCIETY from STUDENT_"+branch+" where S_HEXCODE=?");
+			pst.setString(1,hexcode);
+			 rs=pst.executeQuery();
+			list=rs.getString("S_SOCIETY");
+			 temp="";
+			 String s[]=list.split("#");
+			for(int i=0;i<s.length;i++){
+				if(!s[i].equals(id)){
+					temp=temp+s[i];
+				}
+			  pst=con.prepareStatement("update STUDENT_"+branch+" set S_SOCIETY=? where S_HEXCODE=?");
+				pst.setString(1,temp);
+				pst.setString(2,hexcode);
+				 result=pst.executeUpdate();
+				System.out.println(result+" Records Affected.");
+			
+			
+			
 		}	
 	}
 	
@@ -82,35 +110,54 @@ public class societyDatabase {
 	}
 	
 	public void removeSociety(String id) throws SQLException{
-		pst=con.prepareStatement("delete from SOCIETY where id=?");
+		pst=con.prepareStatement("delete from SOCIETY where ID=?");
 		pst.setString(1,id);
 		int result=pst.executeUpdate();
 		System.out.println(result+" Records Affected.");
 	}
 	
-	public void updateSociety(String s[]) throws SQLException{
-		pst=con.prepareStatement("select * from SOCIETY where id=?");
-		pst.setString(1,s[0]);
+	public void updateSociety(String s[],String id) throws SQLException{
+		pst=con.prepareStatement("select * from SOCIETY where ID=?");
+		pst.setString(1,id);
 		ResultSet rs=pst.executeQuery();
 		rs.next();
 		String sql="update SOCIETY set NAME=?,TYPE=?,MEMBERLIST=?,ABOUT=?,CONTACT=?,PASSWORD=?,BRANCHLIST=? where ID=?";
 		pst=con.prepareStatement(sql);
 		for(int i=1;i<=s.length-1;i++){
 			if(!s[i].equals("")){
-				pst.setString(i,s[i]);
+				pst.setString(i,s[i-1]);
 			}else{
 				pst.setString(i,rs.getString(i+1));
 			}
 		}
-		pst.setString(8,s[0]);
+		pst.setString(8,id);
 		
 		System.out.println(sql);
 		int result=pst.executeUpdate();
 		System.out.println(result+" Records Affected.");
 		
+	}
+	
+	ResultSet fetchAll(String id) throws SQLException{
+		
+		pst=con.prepareStatement("select * from SOCIETY where ID=?");
+		pst.setString(1, id);
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		return rs;
+		
 		
 		
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 
 }

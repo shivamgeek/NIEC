@@ -23,8 +23,16 @@ s_password<input type="text" name="s_password" /><br />
 <option value="MEC">MECH</option>
 </select>
 <br />
-
-s_section<input type="text" name="s_section" /><br />
+Section<select name="section">
+<option value="A1">A1 </option>
+<option value="A2">A2</option>
+<option value="S1">S1</option>
+<option value="S2">S2</option>
+<option value="T1">T1</option>
+<option value="T2">T2</option>
+<option value="F1">F1</option>
+<option value="F2">F2</option>
+</select><br>
 <br />
 Semester<select name="semester">
 <option value="1">1 </option>

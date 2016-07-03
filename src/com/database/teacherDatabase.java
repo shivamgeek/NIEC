@@ -18,6 +18,8 @@ public class teacherDatabase {
 		pst=con.prepareStatement("select * from TEACHER where T_ID=?"); 
 			pst.setString(1,id);
 			ResultSet rs=pst.executeQuery();
+			rs.next();
+			System.out.println("Teacher name "+rs.getString("T_NAME"));
 			return rs;
 		}
 	
@@ -142,7 +144,11 @@ public class teacherDatabase {
 			return false;
 		}
 	
+	public void snoToTid(){
 		
+	}
+	
+	/*	
 	public void addTeacher(String t[]) throws SQLException{
 			pst=con.prepareStatement("insert into TEACHER(T_ID,T_NAME,T_PASSWORD,T_BRANCH,T_PHONE,T_CLASSES,T_EMAIL,T_GENDER,T_STUDENTLIST,T_TEACHERLIST,T_PENDINGLIST,T_SENTLIST,T_ABOUTME) values("
 					+ "?,?,?,?,?,?,?,?,?,?,?,?,?)");
@@ -154,6 +160,37 @@ public class teacherDatabase {
 			System.out.println(result+" Records Affected.");
 		
 		}
+	*/
+	
+	public void addTeacher(String t[]) throws SQLException{
+		pst=con.prepareStatement("insert into TEACHER(T_NAME,T_PASSWORD,T_BRANCH,T_PHONE,T_CLASSES,T_EMAIL,T_GENDER,T_STUDENTLIST,T_TEACHERLIST,T_PENDINGLIST,T_SENTLIST,T_ABOUTME) values("
+				+ "?,?,?,?,?,?,?,?,?,?,?,?)");
+
+		for(int i=1;i<=12;i++){
+			pst.setString(i,t[i-1]);
+		}
+		int result=pst.executeUpdate();
+		System.out.println(result+" Records Affected.");
+		
+		
+		//select SNO from TEACHER order by SNO desc limit 1;
+		
+		pst=con.prepareStatement("select SNO from TEACHER order by SNO desc limit 1");
+        ResultSet rs=pst.executeQuery();
+		rs.next();
+		String sno=rs.getString("SNO");
+		System.out.println("Sno is."+sno);
+		String t_id="|"+sno;
+		String sql="update TEACHER set T_ID=? where SNO=?";
+		
+		System.out.println(sql);
+		pst=con.prepareStatement(sql);
+		pst.setString(1,t_id);	
+		pst.setString(2,sno);
+		result=pst.executeUpdate();
+		System.out.println(result+" Records Affected.");
+	
+	}
 	
 	public void deleteTeacher(String id) throws SQLException{
 		pst=con.prepareStatement("delete from TEACHER where T_ID=?");
@@ -173,7 +210,7 @@ public class teacherDatabase {
 		pst=con.prepareStatement(sql);
 		for(int i=1;i<=12;i++){
 			if(!t[i].equals("")){
-				pst.setString(i,t[i]);
+				pst.setString(i,t[i-1]);
 			}else{
 				pst.setString(i,rs.getString(i+1));
 			}
@@ -183,6 +220,7 @@ public class teacherDatabase {
 		int result=pst.executeUpdate();
 		System.out.println(result+" Records Affected.");
 	}
+	
 	
 	
 

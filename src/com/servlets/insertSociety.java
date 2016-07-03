@@ -22,7 +22,7 @@ public class insertSociety extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
-		String roll=request.getParameter("id");
+		String id=request.getParameter("id");
 		Enumeration<String> e=request.getParameterNames();
 		
 		int length=0;
@@ -44,10 +44,10 @@ public class insertSociety extends HttpServlet {
 					sd.addSociety(values);
 				}
 				else if(radio.equals("delete")){
-					sd.removeSociety(values[0]);
+					sd.removeSociety(id);
 				}
 				else if(radio.equals("update")){
-				sd.updateSociety(values);
+				sd.updateSociety(values,id);
 				}
 			}
 			 catch (SQLException e1) {
