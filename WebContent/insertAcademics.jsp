@@ -35,6 +35,7 @@ TEACHERS<input type="text" name="teachers"/><br>
 SYLLABUS<input type="text" name="syllabus"/><br>
 Insert<input type="radio" name="choice" value="insert" /><br>
 Update<input type="radio" name="choice" value="update" /><br>
+Delete<input type="radio" name="choice" value="delete" /><br>
 <input type="submit" value="Submit" />
 
 

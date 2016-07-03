@@ -34,6 +34,7 @@ public class academicsDatabase {
 		pst=con.prepareStatement("select SUBJECTS,SUBJECTCODES FROM ACADEMICS_"+s.s_branch+" where SEMESTER=?");
 		pst.setString(1,sem);
 		ResultSet rs=pst.executeQuery();
+		rs.next();
 		return rs;
 		
 	}
@@ -63,7 +64,17 @@ public class academicsDatabase {
 		
 		
 	}
-	
+	public void deleteAcademics(String branch,String sem) throws SQLException{
+		
+		pst=con.prepareStatement("delete from ACADEMICS_"+branch+" where SEMESTER=?");
+		
+		
+			pst.setString(1,sem);
+		
+	int result=	pst.executeUpdate();
+	System.out.println(result+" records affected");
+		
+	}
 	
 	
 	

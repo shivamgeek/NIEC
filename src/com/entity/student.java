@@ -46,8 +46,9 @@ public class student {
 		
 	}
 	
+	
 	public void showAchievment() throws SQLException{
-		acd.showAchievment(s_roll);
+		acd.showAchievement(s_roll);
 	}
 	
 	public HashMap<String,String> showFriends() throws Exception{
@@ -103,10 +104,11 @@ public class student {
 	}
 	
 	
-	public void showMarks(student s,String sem) throws SQLException{   //?1?12#12#23#23#45#?2?12#12#23#23#45#?3?12#12#23#23#45#?4?12#12#23#
-		
+	public HashMap<String,String[]> showMarks(student s,String sem) throws SQLException{   //?1?12#12#23#23#45#?2?12#12#23#23#45#?3?12#12#23#23#45#?4?12#12#23#
+		HashMap<String,String[]> hm=new HashMap<String,String[]>();
 		if(Integer.parseInt(sem)<=Integer.parseInt(s_semester)){  
 			String marks=md.showMarksCode(s_roll,s_branch);
+			
 			ResultSet rs=ad.getSubjects(s,sem);
 			String subName=rs.getString("SUBJECTS");
 			String subCode=rs.getString("SUBJECTCODES");
@@ -119,7 +121,11 @@ public class student {
 				lastIndex=marks.lastIndexOf('#'); 
 			}
 			String marksC=marks.substring(startIndex, lastIndex);
-			String marksCodes[]=marksC.split("#");  
+			String marksCodes[]=marksC.split("#"); 
+			hm.put("subject",subjects);
+			hm.put("codes",codes);
+			hm.put("marks",marksCodes);
+			
 			for(int i=0;i<marksCodes.length&&(subjects.length==marksCodes.length);i++){
 				System.out.println("SUBJECT--> "+subjects[i]+" CODE--> "+codes[i]+" MARKS--> "+marksCodes[i]);
 			}
@@ -128,16 +134,10 @@ public class student {
 		else{
 			System.out.println("Invalid Semester ");
 		}
-		
+		 return hm;
 	}
-	 
-	void showTeachers(){
-		
-		
-		
-		
-		
-	}
+	
+	
 	
 	
 	

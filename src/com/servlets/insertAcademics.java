@@ -25,7 +25,7 @@ public class insertAcademics extends HttpServlet {
 		
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
-		String roll=request.getParameter("s_roll");
+		String sem=request.getParameter("semester");
 		String branch=request.getParameter("branch");
 		Enumeration<String> e=request.getParameterNames();
 		
@@ -47,7 +47,7 @@ public class insertAcademics extends HttpServlet {
 				ad.insertAll(values, branch);
 			}
 			else if(radio.equals("delete")){
-				
+				ad.deleteAcademics(branch, sem);
 			}
 			else if(radio.equals("update")){
 				ad.updateAcademics(values, branch);

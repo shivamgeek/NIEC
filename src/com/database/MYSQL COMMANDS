@@ -35,6 +35,12 @@ select * from TEACHER;
 alter table TEACHER auto_increment=100;
 select SNO from TEACHER order by SNO desc limit 1;
 alter table SOCIETY modify ID int(5) auto_increment;
+alter table NOTICE modify ID int(5) auto_increment ;
 
+drop table ACHIEVEMENT;
+create table ACHIEVEMENT(ID int(5) auto_increment primary key,CONTENT varchar(500),SENDER varchar(20),STUDENT varchar(20),DATE1 DATE); 
+insert into ACHIEVEMENT values (5,'hello','me','01215602714','2015/7/3');
+delete from ACHIEVEMENT where DATE1 < date_sub(now(),interval 7 month);
+select * from ACHIEVEMENT;
 
 

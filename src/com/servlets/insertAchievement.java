@@ -10,20 +10,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.database.achievementDatabase;
 import com.database.noticeDatabase;
-import com.database.societyDatabase;
 
 /**
- * Servlet implementation class insertNotice
+ * Servlet implementation class insertAchievement
  */
-@WebServlet("/insertNotice")
-public class insertNotice extends HttpServlet {
+@WebServlet("/insertAchievement")
+
+public class insertAchievement extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
-    
+
+	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		noticeDatabase nd;
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
 		String roll=request.getParameter("id");
@@ -40,15 +40,16 @@ public class insertNotice extends HttpServlet {
 			values[i]=request.getParameter(e.nextElement());
 			}
 		try {
-			nd=new noticeDatabase();
+			achievementDatabase ad=new achievementDatabase();
+			//ad=new noticeDatabase();
 			if(radio.equals("insert")){
-				nd.addNotice(values[0],values[1],values[2],values[3]);
+				ad.addAchievement(values[0],values[1],values[2]);
 			}
 			else if(radio.equals("delete")){
-				nd.deleteNotice(values[4]);
+				ad.removeAchievement();
 			}
 			else if(radio.equals("approve")){
-			nd.approveNotice(values[4]);
+			//ad.approveNotice(values[4]);
 			}
 		}
 		 catch (SQLException e1) {
@@ -57,12 +58,9 @@ public class insertNotice extends HttpServlet {
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		};
+		}
+		
+		
 	}
-	
-	}
 
-	
-	
-
-
+}
