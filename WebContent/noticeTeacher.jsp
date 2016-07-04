@@ -7,20 +7,27 @@
 <title>Insert title here</title>
 </head>
 <body>
-<form action="insertAchievement" method="GET">
+
+
+
+<form action="insertNotice" method="GET">
 
 content<input type="text" name="content" /><br />
-sender<input type="text" name="sender" /><br />
-Student<input type="text" name="student" /><br />
+receiver<input type="text" name="receiver" /><br />
 <!--  approve
 <select name="approve">
 <option value="0">0</option>
 <option value="1">1</option>
 </select><br />-->
-id<input type="text" name="id" /><br />
+<input type="hidden" name="approve" value="0"/>
+<%System.out.println("Notice JSPS sender name is "+request.getParameter("sender"));%>
+<!--Delete<input type="radio" name="choice" value="delete" /><br>
+approve<input type="radio" name="choice" value="approve" /><br>
+-->
 Insert<input type="radio" name="choice" value="insert" /><br>
-Delete<input type="radio" name="choice" value="delete" /><br>
 
 <input type="submit" value="Submit" />
+</form>
+
 </body>
 </html>

@@ -34,8 +34,10 @@ public class academicsDatabase {
 		pst=con.prepareStatement("select SUBJECTS,SUBJECTCODES FROM ACADEMICS_"+s.s_branch+" where SEMESTER=?");
 		pst.setString(1,sem);
 		ResultSet rs=pst.executeQuery();
-		rs.next();
-		return rs;
+		if(rs.next()){
+			return rs;
+		}
+		return null;
 		
 	}
 	

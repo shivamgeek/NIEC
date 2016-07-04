@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.database.achievementDatabase;
 import com.database.noticeDatabase;
@@ -26,7 +27,8 @@ public class insertAchievement extends HttpServlet {
 		
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
-		String roll=request.getParameter("id");
+		String aid=request.getParameter("id");
+		HttpSession s=request.getSession(false);
 		Enumeration<String> e=request.getParameterNames();
 		
 		int length=0;
@@ -43,14 +45,12 @@ public class insertAchievement extends HttpServlet {
 			achievementDatabase ad=new achievementDatabase();
 			//ad=new noticeDatabase();
 			if(radio.equals("insert")){
-				ad.addAchievement(values[0],values[1],values[2]);
+				ad.addAchievement(values[0],s.getAttribute("id")+" "+s.getAttribute("name"),values[1]);
 			}
 			else if(radio.equals("delete")){
-				ad.removeAchievement();
+				ad.removeAchievement(aid);
 			}
-			else if(radio.equals("approve")){
-			//ad.approveNotice(values[4]);
-			}
+			
 		}
 		 catch (SQLException e1) {
 			// TODO Auto-generated catch block

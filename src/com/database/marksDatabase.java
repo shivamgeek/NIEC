@@ -38,8 +38,10 @@ public class marksDatabase {
 		pst=con.prepareStatement("select MARKS from RESULT_"+branch+" where ROLL=?");
 		pst.setString(1,roll);
 		ResultSet rs=pst.executeQuery();
-		rs.next();
+		if(rs.next()){
 		return rs.getString("MARKS");
+		}
+		return "";
 	}
 	
 	

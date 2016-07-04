@@ -105,11 +105,12 @@ public class student {
 	
 	
 	public HashMap<String,String[]> showMarks(student s,String sem) throws SQLException{   //?1?12#12#23#23#45#?2?12#12#23#23#45#?3?12#12#23#23#45#?4?12#12#23#
-		HashMap<String,String[]> hm=new HashMap<String,String[]>();
+		HashMap<String,String[]> hm=null;
 		if(Integer.parseInt(sem)<=Integer.parseInt(s_semester)){  
 			String marks=md.showMarksCode(s_roll,s_branch);
-			
 			ResultSet rs=ad.getSubjects(s,sem);
+			if(rs!=null && marks!=""){
+				hm=new HashMap<String,String[]>();
 			String subName=rs.getString("SUBJECTS");
 			String subCode=rs.getString("SUBJECTCODES");
 		    String subjects[]=subName.split("#"); 
@@ -130,9 +131,11 @@ public class student {
 				System.out.println("SUBJECT--> "+subjects[i]+" CODE--> "+codes[i]+" MARKS--> "+marksCodes[i]);
 			}
 		}
+	}
 		
 		else{
 			System.out.println("Invalid Semester ");
+			
 		}
 		 return hm;
 	}

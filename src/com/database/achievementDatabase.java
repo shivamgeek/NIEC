@@ -47,6 +47,13 @@ public class achievementDatabase {
 		System.out.println(result+" Results Affected");
 	}
 	
+	public void removeAchievement(String id) throws SQLException{
+		//String date=new SimpleDateFormat("dd/MM/yyyy").format(Calendar.getInstance().getTime());
+		pst=con.prepareStatement("delete from ACHIEVEMENT where ID=?");
+		pst.setString(1, id);
+		int result=pst.executeUpdate();
+		System.out.println(result+" Results Affected");
+	}
 	
 	
 	

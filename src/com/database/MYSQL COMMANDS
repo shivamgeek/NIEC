@@ -42,5 +42,5 @@ create table ACHIEVEMENT(ID int(5) auto_increment primary key,CONTENT varchar(50
 insert into ACHIEVEMENT values (5,'hello','me','01215602714','2015/7/3');
 delete from ACHIEVEMENT where DATE1 < date_sub(now(),interval 7 month);
 select * from ACHIEVEMENT;
-
+alter table CLASSINFO add primary key(S_BRANCH,S_SECTION);
 

@@ -205,11 +205,13 @@ public class teacherDatabase {
 		pst.setString(1, id);
 		ResultSet rs=pst.executeQuery();
 		rs.next();
+		System.out.println("email "+t[5]+" gender "+t[6]);
 		String sql="update TEACHER set T_NAME=?,T_PASSWORD=?,T_BRANCH=?,T_PHONE=?,T_CLASSES=?,T_EMAIL=?,T_GENDER=?,"
 				+ "T_STUDENTLIST=?,T_TEACHERLIST=?,T_PENDINGLIST=?,T_SENTLIST=?,T_ABOUTME=? where T_ID=? ";
 		pst=con.prepareStatement(sql);
 		for(int i=1;i<=12;i++){
-			if(!t[i].equals("")){
+			System.out.println(i-1+"- "+t[i-1]);
+			if(!t[i-1].equals("")){
 				pst.setString(i,t[i-1]);
 			}else{
 				pst.setString(i,rs.getString(i+1));

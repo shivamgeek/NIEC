@@ -6,9 +6,11 @@ import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.database.noticeDatabase;
 import com.database.societyDatabase;
@@ -22,13 +24,17 @@ public class insertNotice extends HttpServlet {
        
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession s=request.getSession(false);
 		
 		noticeDatabase nd;
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
-		String roll=request.getParameter("id");
+		//String roll=request.getParameter("id");
+		//String approve=request.getParameter("approve");
+		String name=request.getParameter("sender");
+		String approve=request.getParameter("approve");
 		Enumeration<String> e=request.getParameterNames();
-		
+		System.out.println("Notice sender name is "+name);
 		int length=0;
 		while(e12.hasMoreElements()){
 		length++;
@@ -42,7 +48,7 @@ public class insertNotice extends HttpServlet {
 		try {
 			nd=new noticeDatabase();
 			if(radio.equals("insert")){
-				nd.addNotice(values[0],values[1],values[2],values[3]);
+				nd.addNotice(values[0],s.getAttribute("id").toString()+s.getAttribute("name").toString(),values[1],approve);
 			}
 			else if(radio.equals("delete")){
 				nd.deleteNotice(values[4]);

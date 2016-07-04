@@ -9,12 +9,13 @@
 <body>
 <h3>Student Profile Page</h3><br>
 <%
-String roll="01215602713",branch="CSE";
+String roll="02715602713",branch="CSE";
 studentDatabase sd=new studentDatabase();
 decodingStudent ds=new decodingStudent();
 noticeDatabase nd=new noticeDatabase();
 ResultSet rs=sd.fetchAll(roll,branch);
 achievementDatabase ad=new achievementDatabase();
+String pending=rs.getString("S_PENDINGLIST");
 %><br>
 <h4>Basic Info</h4><br>
 Name- <%=rs.getString("S_NAME") %><br>
@@ -101,6 +102,7 @@ Achievement ID- <%=rs.getString("ID") %><br>Achievement Content- <%=rs.getString
 <%
 HashMap<String,String[]> hm1=new HashMap<String,String[]>();
  hm1=s.showMarks(s,s.s_semester);
+ if(hm1!=null){
  String subjects[]=hm1.get("subject");
  String codes[]=hm1.get("codes");
  String marksCodes[]=hm1.get("marks");
@@ -108,15 +110,34 @@ HashMap<String,String[]> hm1=new HashMap<String,String[]>();
 	 
 	<br>SUBJECT--><%=subjects[i] %> <br>CODE--> <%=codes[i]%> <br>MARKS-->  <%= marksCodes[i]%><br>
 	<%
-	}
-	%><br>
-
+	} 
+ }
+	%><br><br>
+	<h4>Pending List</h4><br>
+	<h5>Students-</h5>
+	<%
+	HashMap<String,HashMap<String,String>> pend=sd.decodePendingList(pending);
+	HashMap<String,String> student=pend.get("student");
+	HashMap<String,String> teacher=pend.get("teacher");
 	
+	for (String name: student.keySet()){
 
- 
-     
+        key =name.toString();
+        value =student.get(name).toString(); 
+%>
+<br>Student Roll- <%=key %> <br>Student Name- <%=value %>
+ <%} %><br><br>
+   <h5>Teachers-</h5> 
+  <%
+  for (String name: teacher.keySet()){
+
+        key =name.toString();
+        value =teacher.get(name).toString(); 
+%>
+<br>Teacher Roll- <%=key %><br> Teacher Name- <%=value %>
+ <%} %>
     
-  
+
 
 </body>
 </html>

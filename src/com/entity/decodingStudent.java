@@ -56,7 +56,6 @@ public class decodingStudent {
 			for(int i=0;i<list.length();i=i+4){
 					hexcode=list.substring(i,i+4);
 					rs=sd.fetchNameRoll(hexcode,s.s_branch);
-					rs.next();
 					hm.put(rs.getString("S_ROLL"),rs.getString("S_NAME"));
 			}
 		}
@@ -125,6 +124,10 @@ public class decodingStudent {
 	}
 	
 //******************BRANCH*****************
+	
+	
+	
+	
 	public int branchCode(int branch) throws Exception{  //156 -->1
 		int code=0;
 		switch(branch){    //MAPS BRANCH CODES TO SINGLE DIGIT INTEGER VALUES
@@ -166,27 +169,33 @@ public class decodingStudent {
 
 		String branchVal=null;
 		switch(branch){    
-		case 156:{
+		case 156:
+		case 1:{
 			 branchVal="CSE";
 			break;
 		}
-		case 157:{
+		case 157:
+		case 2:{
 			branchVal="ECE";
 			break;
 		}
-		case 158:{
+		case 158:
+		case 3:{
 			branchVal="EEE";
 			break;
 		}
-		case 159:{
+		case 159:
+		case 4:{
 			branchVal="MECH";
 			break;
 		}
-		case 160:{
+		case 160:
+		case 5:{
 			branchVal="IT";
 			break;
 		}
-		case 161:{
+		case 161:
+		case 6:{
 			branchVal="CIVIL";
 			break;
 		}

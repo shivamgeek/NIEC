@@ -15,7 +15,7 @@ public class admin {
 	public admin() throws ClassNotFoundException, SQLException{
 		nd=new noticeDatabase();
 		ad=new achievementDatabase();
-		ad.removeAchievment();
+		ad.removeAchievement();
 		
 	}
 	

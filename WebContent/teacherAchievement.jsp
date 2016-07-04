@@ -8,19 +8,11 @@
 </head>
 <body>
 <form action="insertAchievement" method="GET">
-
 content<input type="text" name="content" /><br />
-sender<input type="text" name="sender" /><br />
-Student<input type="text" name="student" /><br />
-<!--  approve
-<select name="approve">
-<option value="0">0</option>
-<option value="1">1</option>
-</select><br />-->
-id<input type="text" name="id" /><br />
+Student Roll Number<input type="text" name="student" /><br />
 Insert<input type="radio" name="choice" value="insert" /><br>
-Delete<input type="radio" name="choice" value="delete" /><br>
-
 <input type="submit" value="Submit" />
+</form>
+
 </body>
 </html>
