@@ -7,9 +7,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>Student Login</h3><br>
+<h3>Login</h3><br>
 <form action="login">
-Enter Roll<input type="text" name="roll"><br>
+<select name="who">
+<option value="Student">Student</option>
+<option value="Teacher">Teacher</option>
+<option value="Admin">Admin</option>
+</select><br>
+
+Enter Roll<input type="text" name="id"><br>
 Enter Password<input type="text" name="pass"><br>
 <input type="submit">
 </form>

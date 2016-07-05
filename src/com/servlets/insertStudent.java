@@ -18,20 +18,13 @@ public class insertStudent extends HttpServlet {
 	studentDatabase sd;
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+ 
 		try{
-		hi(request,response);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-	
-		
-	}
-	
-	void hi(HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
 		String roll=request.getParameter("s_roll");
 		String branch=request.getParameter("s_branch");
+	
 		Enumeration<String> e=request.getParameterNames();
 		
 		int length=0;
@@ -45,7 +38,7 @@ public class insertStudent extends HttpServlet {
 			values[i]=request.getParameter(e.nextElement());
 			}	
 		
-		try{
+		
 		sd=new studentDatabase();
 		if(radio.equals("insert")){
 			sd.addStudent(values,branch);
@@ -53,16 +46,22 @@ public class insertStudent extends HttpServlet {
 		else if(radio.equals("delete")){
 			sd.removeStudent(roll,branch);
 		}
-		else if(radio.equals("update")){
+		else {
 			sd.updateStudentAll(values,branch);
 		}
 		
 		
-		
-		
 	} catch (ClassNotFoundException e1) {
+		PrintWriter p=response.getWriter();
+		p.println("Some error occured in getting data");
 		e1.printStackTrace();
 	} catch (SQLException e1) {
+		PrintWriter p=response.getWriter();
+		p.println("Some error occured in getting data");
+		e1.printStackTrace();
+	} catch (Exception e1) {
+		PrintWriter p=response.getWriter();
+		p.println("Some error occured in getting data");
 		e1.printStackTrace();
 	}
 	}

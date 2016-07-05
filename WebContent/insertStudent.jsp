@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-hello
+Student
 <form action="insertStudent" method="GET">
 s_roll <input type="text" name="s_roll"><br />
 s_hexcode<input type="text" name="s_hexcode" /><br />
@@ -60,6 +60,7 @@ s_sentList<input type="text" name="s_sentList" /><br />
 s_aboutMe<input type="text" name="s_aboutMe" /><br />
 
 s_society<input type="text" name="s_society" /><br />
+chat id<input type="text" name="chatid" /><br />
 Insert<input type="radio" name="choice" value="insert" /><br>
 Delete<input type="radio" name="choice" value="delete" /><br>
 Update<input type="radio" name="choice" value="update" /><br>

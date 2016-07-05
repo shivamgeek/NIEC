@@ -27,7 +27,7 @@ Semester<select name="semester">
 <option value="MEC">MECH</option>
 </select><br>
 roll<input type="text" name="roll"/><br>
-marks<input type="text" name="marks"/><br>
+Enter raw marks e.g. ?1?23#24#22#?2?21#45#<input type="text" name="marks"/><br>
 
 Insert<input type="radio" name="choice" value="insert" /><br>
 show<input type="radio" name="choice" value="show" /><br>

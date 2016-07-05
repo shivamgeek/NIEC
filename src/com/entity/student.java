@@ -106,7 +106,7 @@ public class student {
 	
 	public HashMap<String,String[]> showMarks(student s,String sem) throws SQLException{   //?1?12#12#23#23#45#?2?12#12#23#23#45#?3?12#12#23#23#45#?4?12#12#23#
 		HashMap<String,String[]> hm=null;
-		if(Integer.parseInt(sem)<=Integer.parseInt(s_semester)){  
+		if(Integer.parseInt(sem)<Integer.parseInt(s_semester)){  
 			String marks=md.showMarksCode(s_roll,s_branch);
 			ResultSet rs=ad.getSubjects(s,sem);
 			if(rs!=null && marks!=""){
@@ -126,6 +126,9 @@ public class student {
 			hm.put("subject",subjects);
 			hm.put("codes",codes);
 			hm.put("marks",marksCodes);
+			if(subjects.length!=marksCodes.length){
+				System.out.println("Unequal number of subjects and marks");
+			}
 			
 			for(int i=0;i<marksCodes.length&&(subjects.length==marksCodes.length);i++){
 				System.out.println("SUBJECT--> "+subjects[i]+" CODE--> "+codes[i]+" MARKS--> "+marksCodes[i]);
@@ -134,13 +137,15 @@ public class student {
 	}
 		
 		else{
-			System.out.println("Invalid Semester ");
+			System.out.println("Invalid Semester showMarks() ");
 			
 		}
 		 return hm;
 	}
 	
-	
+	public void closeConnection() throws SQLException{
+	sd.closeConnection();
+	}
 	
 	
 	

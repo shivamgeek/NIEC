@@ -9,7 +9,9 @@
 <body>
 <h3>Student Profile Page</h3><br>
 <%
-String roll="02715602713",branch="CSE";
+
+HttpSession se=request.getSession(false);
+String roll=se.getAttribute("id").toString(),branch=se.getAttribute("branch").toString();
 studentDatabase sd=new studentDatabase();
 decodingStudent ds=new decodingStudent();
 noticeDatabase nd=new noticeDatabase();
@@ -32,11 +34,15 @@ Email- <%=rs.getString("S_EMAIL") %><br>
 Gender- <%=rs.getString("S_GENDER") %><br><br>
 <h4>FriendList</h4> <br>
 <%
-student s=new student(roll);
 
-HashMap<String,String> hm=new HashMap<String,String>();
-hm=s.showFriends();
+student s=null;
 String key,value;
+HashMap<String,String> hm;
+try{
+	s=new student(roll);
+	hm=new HashMap<String,String>();
+hm=s.showFriends();
+
 for (String name: hm.keySet()){
 
             key =name.toString();
@@ -44,10 +50,20 @@ for (String name: hm.keySet()){
             %> 
 <br>Student Roll- <%=key %> <br>Student Name- <%=value %><br>
 <%
-} %>
+} 
+}catch(Exception e){
+out.println("Sorry No Student Friends");
+e.printStackTrace();
+}
+
+%>
 <br><br>
-<h4> TeacherList</h4><br><%try{
-	 
+	
+
+
+
+<h4> TeacherList</h4><br><%
+	try{ 
 hm=sd.fetchTeacherList(roll,branch);
 for (String name: hm.keySet()){
 
@@ -57,13 +73,13 @@ for (String name: hm.keySet()){
 <br>Teacher ID- <%=key %> <br>Teacher Name- <%=value %><br>
 <%
 }
+	}catch(Exception e){
+		out.println("Sorry No Teacher Friends");e.printStackTrace();
+		}
 
-}catch(Exception e){
-out.println("Sorry no friends");
-}
 %><br><br>
 <h4>Societies joined</h4><br>
-<%
+<% try{
 hm=sd.getSociety(roll,s.s_branch);
 for (String name: hm.keySet()){
 
@@ -74,9 +90,14 @@ for (String name: hm.keySet()){
 
 <%
 }
+}catch(Exception e){
+out.println("Sorry No Societies");e.printStackTrace();
+}
+
+
 %><br><br>
 <h4>Notice</h4><br>
-<%
+<% try{
  rs=nd.showNoticeStudent(s);
 while(rs.next()){
 	%><br>
@@ -85,9 +106,12 @@ while(rs.next()){
 	
 <%
 }
+}catch(Exception e){
+out.println("Sorry No New Notices");e.printStackTrace();
+}
 %><br><br>
  <h4>Achievements</h4>:<br>
-<%
+<% try{
  rs=ad.showAchievement(roll);
 while(rs.next()){
 	%><br>
@@ -96,10 +120,14 @@ Achievement ID- <%=rs.getString("ID") %><br>Achievement Content- <%=rs.getString
 	
 <%
 }
+}catch(Exception e){
+out.println("Sorry No Achievements");e.printStackTrace();
+}
+
 %>
 <br><br>
 <h4>Academics</h4><br>
-<%
+<% try{
 HashMap<String,String[]> hm1=new HashMap<String,String[]>();
  hm1=s.showMarks(s,s.s_semester);
  if(hm1!=null){
@@ -111,14 +139,19 @@ HashMap<String,String[]> hm1=new HashMap<String,String[]>();
 	<br>SUBJECT--><%=subjects[i] %> <br>CODE--> <%=codes[i]%> <br>MARKS-->  <%= marksCodes[i]%><br>
 	<%
 	} 
+ }}catch(Exception e){
+	 out.println("Sorry No Academic Record yet");e.printStackTrace();
  }
 	%><br><br>
 	<h4>Pending List</h4><br>
 	<h5>Students-</h5>
+	
 	<%
+	HashMap<String,String> student=null,teacher=null;
+	try{
 	HashMap<String,HashMap<String,String>> pend=sd.decodePendingList(pending);
-	HashMap<String,String> student=pend.get("student");
-	HashMap<String,String> teacher=pend.get("teacher");
+	 student=pend.get("student");
+	 teacher=pend.get("teacher");
 	
 	for (String name: student.keySet()){
 
@@ -126,16 +159,28 @@ HashMap<String,String[]> hm1=new HashMap<String,String[]>();
         value =student.get(name).toString(); 
 %>
 <br>Student Roll- <%=key %> <br>Student Name- <%=value %>
- <%} %><br><br>
+ <%} 
+	}catch(Exception e){
+		out.println("Sorry No Student Pending List");e.printStackTrace();
+		}
+ %><br><br>
    <h5>Teachers-</h5> 
   <%
+  try{
   for (String name: teacher.keySet()){
 
         key =name.toString();
         value =teacher.get(name).toString(); 
 %>
 <br>Teacher Roll- <%=key %><br> Teacher Name- <%=value %>
- <%} %>
+ <%}
+  
+  
+}catch(Exception e){
+out.println("Sorry no Teacher Pending List");e.printStackTrace();
+}
+  
+  %>
     
 
 

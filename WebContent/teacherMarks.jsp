@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+    pageEncoding="UTF-8" import="com.database.*" import="java.util.*" import="java.sql.*" import="com.entity.*" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -7,7 +7,94 @@
 <title>Insert title here</title>
 </head>
 <body>
-Enter Student Roll<form><input type="text" name="roll"></form>
+Enter Student Roll<form action="teacherMarks"><input type="text" name="roll">
+<input type="hidden" name="formType" value="insertForm">
+<select name="branch">
+<option value="CSE">CSE </option>
+<option value="EEE"> EEE</option>
+<option value="ECE"> ECE</option>
+<option value="CIV"> CIVIL</option>
+<option value="IT_"> IT</option>
+<option value="MEC">MECH</option>
+</select>
+Semester<select name="semester">
+<option value="1">1 </option>
+<option value="2">2</option>
+<option value="3">3</option>
+<option value="4">4</option>
+<option value="5">5</option>
+<option value="6">6</option>
+<option value="7">7</option>
+<option value="8">8</option>
+</select><br>
+<input type="submit">
+ <%try{
+if(!(request.getAttribute("roll")==null)){
+String roll=(String)request.getAttribute("roll");
+String branch=(String)request.getAttribute("branch");
+String sem=(String)request.getAttribute("semester");
+student s=new student(roll);
+decodingStudent ds=new decodingStudent();
+String b=ds.branchName(ds.findBranchFromRoll(roll));
+HashMap<String,String[]> hm=s.showMarks(s,sem);
+if(hm!=null && b.equals(branch)){
+String subjects[]=hm.get("subject");
+String codes[]=hm.get("codes");
+String marksCodes[]=hm.get("marks");
+String len=marksCodes.length+"";
+
+%>
+
+
+</form><br><br>
+<h3>MARKS</h3>
+<table border="5">
+
+<tr><th>Subject</th><th>Code</th><th>Insert/Update</th></tr>
+
+
+<form action="teacherMarks">
+<input type="hidden" name="len" value="<%=len %>">
+<input type="hidden" name="formType" value="updateForm">
+<% 
+for(int i=0;i<marksCodes.length&&(subjects.length==marksCodes.length);i++){   %>
+     <tr>
+	<td><br><%=subjects[i] %></td><td><%=codes[i]%>  
+	<td><input type="text" name="marks<%=i %>" value=<%= marksCodes[i]%> >  </td></tr>
+	<%
+	} %>
+
+</table>
+Update<input type="radio" name="choice" value="update" /><br>
+
+<input type="submit"></form> 
+<% s.closeConnection();
+}
+else{
+	out.println("Invalid Roll or Branch");
+	
+}
+
+
+ }}catch(Exception e){
+	 out.println("Some problem occured in getting data");
+	 e.printStackTrace();
+	 }
+
+
+%> 
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 </body>

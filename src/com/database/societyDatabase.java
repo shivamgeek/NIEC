@@ -150,7 +150,10 @@ public class societyDatabase {
 		
 	}
 	
-	
+	public void closeConnection() throws SQLException{
+		pst.close();
+		con.close();
+	}
 	
 	
 	

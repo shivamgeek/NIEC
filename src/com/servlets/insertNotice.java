@@ -1,19 +1,18 @@
 package com.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.database.noticeDatabase;
-import com.database.societyDatabase;
 
 /**
  * Servlet implementation class insertNotice
@@ -24,8 +23,10 @@ public class insertNotice extends HttpServlet {
        
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		HttpSession s=request.getSession(false);
 		
+		try{
+		
+		HttpSession s=request.getSession(false);
 		noticeDatabase nd;
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
@@ -45,7 +46,7 @@ public class insertNotice extends HttpServlet {
 		for(int i=0;i<length;i++){
 			values[i]=request.getParameter(e.nextElement());
 			}
-		try {
+		
 			nd=new noticeDatabase();
 			if(radio.equals("insert")){
 				nd.addNotice(values[0],s.getAttribute("id").toString()+s.getAttribute("name").toString(),values[1],approve);
@@ -58,17 +59,19 @@ public class insertNotice extends HttpServlet {
 			}
 		}
 		 catch (SQLException e1) {
-			// TODO Auto-generated catch block
+			 PrintWriter p=response.getWriter();
+				p.println("Some error occured in getting data");
 			e1.printStackTrace();
 		} catch (ClassNotFoundException e1) {
-			// TODO Auto-generated catch block
+			PrintWriter p=response.getWriter();
+			p.println("Some error occured in getting data");
 			e1.printStackTrace();
 		};
-	}
+	
 	
 	}
 
 	
-	
+	}
 
 

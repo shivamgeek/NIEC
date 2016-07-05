@@ -1,6 +1,7 @@
 package com.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.Enumeration;
 
@@ -22,7 +23,7 @@ public class insertAcademics extends HttpServlet {
      academicsDatabase ad;  
    
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+		try {
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
 		String sem=request.getParameter("semester");
@@ -41,7 +42,7 @@ public class insertAcademics extends HttpServlet {
 			}	
 		
 		
-		try {
+		
 			ad=new academicsDatabase();
 			if(radio.equals("insert")){
 				ad.insertAll(values, branch);
@@ -54,7 +55,8 @@ public class insertAcademics extends HttpServlet {
 			}
 		}
 			catch (ClassNotFoundException | SQLException e2) {
-			// TODO Auto-generated catch block
+				PrintWriter p=response.getWriter();
+				p.println("Some error occured in getting data");
 			e2.printStackTrace();
 		
 			}

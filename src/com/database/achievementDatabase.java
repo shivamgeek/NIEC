@@ -55,6 +55,10 @@ public class achievementDatabase {
 		System.out.println(result+" Results Affected");
 	}
 	
+	public void closeConnection() throws SQLException{
+		pst.close();
+		con.close();
+	}
 	
 	
 	

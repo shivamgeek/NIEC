@@ -12,18 +12,9 @@
 
 <form action="insertNotice" method="GET">
 
-content<input type="text" name="content" /><br />
-receiver<input type="text" name="receiver" /><br />
-<!--  approve
-<select name="approve">
-<option value="0">0</option>
-<option value="1">1</option>
-</select><br />-->
+Content<input type="text" name="content" /><br />
+Receiver<input type="text" name="receiver" /><br />
 <input type="hidden" name="approve" value="0"/>
-<%System.out.println("Notice JSPS sender name is "+request.getParameter("sender"));%>
-<!--Delete<input type="radio" name="choice" value="delete" /><br>
-approve<input type="radio" name="choice" value="approve" /><br>
--->
 Insert<input type="radio" name="choice" value="insert" /><br>
 
 <input type="submit" value="Submit" />

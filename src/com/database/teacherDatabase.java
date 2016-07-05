@@ -223,6 +223,27 @@ public class teacherDatabase {
 		System.out.println(result+" Records Affected.");
 	}
 	
+	public Boolean loginTeacher(String roll,String pass) throws Exception,SQLException{
+		pst=con.prepareStatement("select * from TEACHER where T_ID=? and T_PASSWORD=?");
+		pst.setString(1, roll);
+		pst.setString(2, pass);
+		ResultSet rs=pst.executeQuery();
+		if(rs.next()){
+			return true;
+		}
+		return false;
+	}
+	
+	
+	
+	
+	
+	
+	
+	public void closeConnection() throws SQLException{
+		pst.close();
+		con.close();
+	}
 	
 	
 

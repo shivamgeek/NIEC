@@ -12,20 +12,22 @@
 <h3>Teacher Profile Page</h3><br>
 <%
 
-String id="|104",branch="CSE";
-HttpSession s=request.getSession();
-s.setAttribute("id",id);
-
+HttpSession se=request.getSession(false);
+String id=se.getAttribute("id").toString();
 teacherDatabase td=new teacherDatabase();
-ResultSet rs=td.fetchAll(id);
+ResultSet rs=null;
+String tid=null,tnme=null,list=null;
 teacher t=new teacher(id);
 studentDatabase sd=new studentDatabase();
 decodingStudent ds=new decodingStudent();
 noticeDatabase nd=new noticeDatabase();
 achievementDatabase ad=new achievementDatabase();
-String tid=rs.getString("T_ID");
-String tnme=rs.getString("T_NAME");
-s.setAttribute("name",tnme);
+try{
+	 rs=td.fetchAll(id);
+
+tid=rs.getString("T_ID");
+tnme=rs.getString("T_NAME");
+se.setAttribute("name",tnme);
 %><br>
 <h4>Basic Info</h4><br>
 Name- <%=rs.getString("T_NAME") %><br>
@@ -43,7 +45,7 @@ Gender- <%=rs.getString("T_GENDER") %><br><br>
 <h4>Teacher FriendList</h4><br>
 <%
 rs=td.fetchAll(id);
- String list=rs.getString("T_TEACHERLIST");
+ list=rs.getString("T_TEACHERLIST");
  if(list.length()>3){
 for(int i=0;i<list.length();i=i+4){
 	rs=td.fetchAll(list.substring(i,i+4));
@@ -51,11 +53,15 @@ for(int i=0;i<list.length();i=i+4){
 		Name-<%=rs.getString("T_NAME") %> <br>
 <%	
 }
- }
+ }}catch(Exception e){
+	 out.println("Sorry some problem occured in getting basic information");
+	 e.printStackTrace();
+	 }
 %>
 
 <h4>Student FriendList</h4><br>
-<%
+<% try{
+
 rs=td.fetchAll(id);
 list=rs.getString("T_STUDENTLIST");
 if(list.length()>3){
@@ -65,9 +71,15 @@ for(int i=0;i<list.length();i=i+4){
 		Name-<%=rs.getString("S_NAME") %> <br>
 <%	
 }
- }	%>
-<h4>Notice</h4><br>
+ }	}catch(Exception e){
+	 out.println("Sorry No FriendList");
+	 e.printStackTrace();
+	 }
+ 
+ %>
+<h4>Notice</h4>
 <%
+try{
  rs=nd.showNoticeTeacher(t);
 while(rs.next()){
 	%><br>
@@ -76,13 +88,18 @@ while(rs.next()){
 	
 <%
 }
+}catch(Exception e){
+	 out.println("Sorry No Notices");
+	 e.printStackTrace();
+	 }
 %><br><br>
 <form action="noticeTeacher.jsp">
 <input type="submit" value="Add Notice"> </form>
-<br><br>
+<br>
 <form action="teacherAchievement.jsp">
-<input type="submit" value="Add Achevement"> </form>
-
+<input type="submit" value="Add Achevement"> </form><br>
+<form action="teacherMarks.jsp">
+<input type="submit" value="Show/Update Marks"> </form>
 
 
 

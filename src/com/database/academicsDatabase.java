@@ -78,6 +78,10 @@ public class academicsDatabase {
 		
 	}
 	
+	public void closeConnection() throws SQLException{
+		pst.close();
+		con.close();
+	}
 	
 	
 

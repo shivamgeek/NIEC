@@ -1,6 +1,7 @@
 package com.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Enumeration;
 
 import javax.servlet.ServletException;
@@ -21,8 +22,9 @@ public class insertResult extends HttpServlet {
        
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		marksDatabase md;
 		
+		try{
+		marksDatabase md;
 		Enumeration<String> e12=request.getParameterNames(); //TO FIND THE LENGTH OF PARAMETERS DYANAMICALLY
 		String radio=request.getParameter("choice");
 		String roll=request.getParameter("roll");
@@ -41,19 +43,21 @@ public class insertResult extends HttpServlet {
 			values[i]=request.getParameter(e.nextElement());
 			}	
 		
-	     try{
+	     
 		md=new marksDatabase();
 		if(radio.equals("insert")){
-			md.insertMarks(values[3],roll, branch);
+			md.insertMarks(values[3],sem,roll, branch);
 		}
 		else if(radio.equals("show")){
 			String t=md.showMarksCode(roll, branch);
 			System.out.println(t);
 		}
 		else if(radio.equals("update")){
-			md.updateMarks(values[3], roll, branch);
+			md.updateMarks(values[3], roll, branch,sem);
 		}
 	     }catch(Exception e5){
+	    	 PrintWriter p=response.getWriter();
+				p.println("Some error occured in getting data");
 	    	 e5.printStackTrace();
 	     }
 		}

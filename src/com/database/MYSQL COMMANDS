@@ -43,4 +43,14 @@ insert into ACHIEVEMENT values (5,'hello','me','01215602714','2015/7/3');
 delete from ACHIEVEMENT where DATE1 < date_sub(now(),interval 7 month);
 select * from ACHIEVEMENT;
 alter table CLASSINFO add primary key(S_BRANCH,S_SECTION);
+alter table RESULT_CSE modify ROLL varchar(20) primary key ;
 
+
+alter table STUDENT_CSE add CHATID varchar(50);
+alter table STUDENT_ECE add CHATID varchar(50);
+alter table STUDENT_EEE add CHATID varchar(50);
+alter table STUDENT_CIV add CHATID varchar(50);
+alter table STUDENT_IT_ add CHATID varchar(50);
+alter table STUDENT_MEC add CHATID varchar(50);
+
+create table CHAT_4 (MID int(10) auto_increment primary key,MESSAGE varchar(500),sender varchar(30),TIME DATETIME);

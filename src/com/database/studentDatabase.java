@@ -151,18 +151,19 @@ public class studentDatabase {
 		rs.next();
 		String sect=rs.getString("S_SECTION");
 		String hex=rs.getString("S_HEXCODE");
+
 		String sql="update STUDENT_"+branch+ " set S_HEXCODE=?,S_NAME=?,S_PASSWORD=?,S_BRANCH=?,S_SECTION=?,S_SEMESTER=?,S_ADDRESS=?,S_PHONE=?,S_EMAIL=?,S_GENDER=?,"
-				+ "S_OTHERFRIENDLIST=?,S_TEACHERLIST=?,S_PENDINGLIST=?,S_SENTLIST=?,S_ABOUTME=?,S_SOCIETY=? where S_ROLL=?";
+				+ "S_OTHERFRIENDLIST=?,S_TEACHERLIST=?,S_PENDINGLIST=?,S_SENTLIST=?,S_ABOUTME=?,S_SOCIETY=?,CHATID=? where S_ROLL=?";
 		pst=con.prepareStatement(sql);
 		
-		for(int i=1;i<=16;i++){
+		for(int i=1;i<=17;i++){
 			if(!s[i].equals("")){
 				pst.setString(i,s[i]);
 			}else{
 				pst.setString(i,rs.getString(i+1));
 			}
 		}
-		pst.setString(17, s[0]);
+		pst.setString(18, s[0]);
 		
 		System.out.println(sql);
 		int result=pst.executeUpdate();
@@ -196,9 +197,9 @@ public class studentDatabase {
 	public void addStudent(String s[],String branch) throws Exception{
 	
 	pst=con.prepareStatement("insert into STUDENT_"+branch+"(S_ROLL,S_HEXCODE,S_NAME,S_PASSWORD,S_BRANCH,S_SECTION,S_SEMESTER,S_ADDRESS,S_PHONE,S_EMAIL,S_GENDER,"
-			+ "S_OTHERFRIENDLIST,S_TEACHERLIST,S_PENDINGLIST,S_SENTLIST,S_ABOUTME,S_SOCIETY) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+			+ "S_OTHERFRIENDLIST,S_TEACHERLIST,S_PENDINGLIST,S_SENTLIST,S_ABOUTME,S_SOCIETY,CHATID) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-		for(int i=1;i<=17;i++){
+		for(int i=1;i<=18;i++){
 			pst.setString(i,s[i-1]);
 		}
 		pst.setString(2,ds.rollToHex(s[0]));
@@ -437,6 +438,10 @@ public class studentDatabase {
 		return hm;
 	}
 	
+	public void closeConnection() throws SQLException{
+		pst.close();
+		con.close();
+	}
 	
 	
 	
