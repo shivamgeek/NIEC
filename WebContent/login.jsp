@@ -9,7 +9,7 @@
 <body>
 <h3>Login</h3><br>
 <form action="login">
-<select name="who">
+<select name="whos">
 <option value="Student">Student</option>
 <option value="Teacher">Teacher</option>
 <option value="Admin">Admin</option>

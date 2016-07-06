@@ -32,12 +32,8 @@ public class teacherDatabase {
 	}
 	                       //01215602713     //||24
 	public void addPendingList(String id,String friendCode)throws SQLException,Exception{
-		if(id.charAt(0)=='|'){
+		
 		pst=con.prepareStatement("update TEACHER set T_PENDINGLIST=concat(T_PENDINGLIST,?) where T_ID=?");
-		}else{
-		pst=con.prepareStatement("update STUDENT_"+ds.branchName(ds.findBranchFromRoll(id))+
-				" set S_PENDINGLIST=concat(S_PENDINGLIST,?) where S_ROLL=?");
-		}
 		pst.setString(1,friendCode);
 		pst.setString(2, id);
 		int result=pst.executeUpdate();
@@ -46,62 +42,45 @@ public class teacherDatabase {
 	
 	
 	public void removePendingList(String id,String friendCode) throws Exception{
-		pst=con.prepareStatement("select T_PENDINGLIST from TEACHER where T_ID=?");
-		pst.setString(1,id);
-		ResultSet rs=pst.executeQuery();
-		String list=rs.getString("T_PENDINGLIST");
-		String temp="";
-		String hex;
-		if(friendCode.charAt(0)=='|'){
-			hex=friendCode;
-		}
-		else{
-			hex=ds.rollToHex(friendCode);
-		}
-;		for(int i=0;i<list.length();i=i+4){
-			if(!list.substring(i,i+4).equals(hex)){
-				temp=temp+list.substring(i,i+4);
-			}
-		}
-		  pst=con.prepareStatement("update TEACHER  set T_PENDINGLIST=? where T_ID=?");
-			pst.setString(1,temp);
-			pst.setString(2,id);
-			int result=pst.executeUpdate();
-			System.out.println(result+" Records Affected.");
-		}
-	
-	
-	public void removeSentList(String id,String friendCode) throws Exception{
 		String list;
-		if(id.charAt(0)=='|'){
-			pst=con.prepareStatement("select T_SENTLIST from TEACHER where T_ID=?");
-		}else{
-			pst=con.prepareStatement("select S_SENTLIST from STUDENT_"+ds.branchName(ds.findBranchFromRoll(id))
-			+" where S_ROLL=?");
-		}
+		pst=con.prepareStatement("select T_PENDINGLIST from TEACHER where T_ID=?");
 			pst.setString(1,id);
 			ResultSet rs=pst.executeQuery();
-			if(id.charAt(0)=='|'){
-				list=rs.getString("T_SENTLIST");
-			}
-			else{
-				 list=rs.getString("S_SENTLIST");
-			}
+			rs.next();
+			list=rs.getString("T_PENDINGLIST");
 			String temp="";
 			for(int i=0;i<list.length();i=i+4){
 				if(!list.substring(i,i+4).equals(friendCode)){
 					temp=temp+list.substring(i,i+4);
 				}
 			}
-			if(id.charAt(0)=='|'){
-				pst=con.prepareStatement("update TEACHER  set T_SENTLIST=? where T_ID=?");
-			}else{
-				 pst=con.prepareStatement("update STUDENT_"+ds.branchName(ds.findBranchFromRoll(id))
-				 +" set S_SENTLIST=? where S_ROLL=?");
-			}
+			
+			pst=con.prepareStatement("update TEACHER  set T_PENDINGLIST=? where T_ID=?");
 			pst.setString(1,temp);
-				pst.setString(2,id);
-				int result=pst.executeUpdate();
+			pst.setString(2,id);
+			int result=pst.executeUpdate();
+				System.out.println(result+" Records Affected.");
+		}
+	
+	
+	public void removeSentList(String id,String friendCode) throws Exception{
+		String list;
+		pst=con.prepareStatement("select T_SENTLIST from TEACHER where T_ID=?");
+			pst.setString(1,id);
+			ResultSet rs=pst.executeQuery();
+			rs.next();
+			list=rs.getString("T_SENTLIST");
+			String temp="";
+			for(int i=0;i<list.length();i=i+4){
+				if(!list.substring(i,i+4).equals(friendCode)){
+					temp=temp+list.substring(i,i+4);
+				}
+			}
+			
+			pst=con.prepareStatement("update TEACHER  set T_SENTLIST=? where T_ID=?");
+			pst.setString(1,temp);
+			pst.setString(2,id);
+			int result=pst.executeUpdate();
 				System.out.println(result+" Records Affected.");
 		}
 	
@@ -121,13 +100,15 @@ public class teacherDatabase {
 		pst=con.prepareStatement("select T_STUDENTLIST from TEACHER where T_ID=?");
 		pst.setString(1,id);
 		ResultSet rs=pst.executeQuery();
+		rs.next();
 		return rs.getString("T_STUDENTLIST");
 	}
 	
-	public String fetchTeacherList(String id) throws SQLException{
+	public String fetchTeacherList(String id ) throws SQLException{
 		pst=con.prepareStatement("select T_TEACHERLIST from TEACHER where T_ID=?");
 		pst.setString(1,id);
 		ResultSet rs=pst.executeQuery();
+		rs.next();
 		return rs.getString("T_TEACHERLIST");
 	}
 	
@@ -138,15 +119,12 @@ public class teacherDatabase {
 		}else{
 		list=fetchStudentList(id);
 		}
-		if(((list.indexOf(friendId))!=-1) && ((list.indexOf(id)%4)==0)){
+		if(((list.indexOf(friendId))!=-1) && ((list.indexOf(friendId)%4)==0)){
 				return true;
 			}
 			return false;
 		}
 	
-	public void snoToTid(){
-		
-	}
 	
 	/*	
 	public void addTeacher(String t[]) throws SQLException{
@@ -233,6 +211,35 @@ public class teacherDatabase {
 		}
 		return false;
 	}
+	
+	
+	public boolean isPending(String id,String roll) throws Exception{
+		String hex=ds.rollToHex(roll);
+		pst=con.prepareStatement("select T_PENDINGLIST from TEACHER where T_ID=?");
+		pst.setString(1,id);
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		String list=rs.getString("T_PENDINGLIST");
+		if(((list.indexOf(hex))!=-1) && ((list.indexOf(hex)%4)==0)){
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isSent(String id,String fid) throws Exception{
+		pst=con.prepareStatement("select T_SENTLIST from TEACHER where T_ID=?");
+		pst.setString(1, id);
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		String list=rs.getString("T_SENTLIST");
+		
+		if(((list.indexOf(fid))!=-1) && ((list.indexOf(fid)%4)==0)){
+			return true;
+		}
+		return false;
+	}
+	
+	
 	
 	
 	

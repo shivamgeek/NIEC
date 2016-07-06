@@ -29,11 +29,30 @@ public class login extends HttpServlet {
 		try {
 			response.setContentType("text/html");
 			
-			String who=request.getParameter("who");
+			String whos=request.getParameter("whos");
 		
 			String id=request.getParameter("id");
 			String pass=request.getParameter("pass");
-			if(who.equals("Student")){
+			if(whos.equals("Teacher")){
+				
+				//response.sendRedirect("teacherProfile.jsp?who="+id);
+				teacherDatabase td=new teacherDatabase();
+				if(td.loginTeacher(id, pass)){
+					HttpSession s=request.getSession(true);
+					 s.setAttribute("id",id);
+					 System.out.println("teacher login as "+id);
+					 System.out.println("teacherProfile.jsp?who="+id);
+					 id=id.substring(1,4);
+					 response.sendRedirect("teacherProfile.jsp?who="+id);
+						 
+				}else{
+					p.println("Invalid Roll or Password");
+					rd=request.getRequestDispatcher("login.jsp");
+					rd.include(request, response);
+				}
+				
+			}else if(whos.equals("Student")){
+
 				studentDatabase sd=new studentDatabase();
 				if(sd.loginStudent(id, pass)){
 					decodingStudent ds=new decodingStudent();
@@ -41,24 +60,16 @@ public class login extends HttpServlet {
 					 HttpSession s=request.getSession(true);
 					 s.setAttribute("id",id);
 					 s.setAttribute("branch",ds.branchName(ds.findBranchFromRoll(id)));
-					 rd=request.getRequestDispatcher("studentProfile.jsp");
-					rd.forward(request, response);
-				}
-					p.println("Invalid Roll or Password");
-					rd=request.getRequestDispatcher("login.jsp");
-					rd.include(request, response);
+					// rd=request.getRequestDispatcher("studentProfile.jsp?who="+id);
+					//rd.forward(request, response);
+					 response.sendRedirect("studentProfile.jsp?who="+id);
 				
-			}else if(who.equals("Teacher")){
-				teacherDatabase td=new teacherDatabase();
-				if(td.loginTeacher(id, pass)){
-					HttpSession s=request.getSession(true);
-					 s.setAttribute("id",id);
-					 rd=request.getRequestDispatcher("teacherProfile.jsp");
-					rd.forward(request, response);
-				}
+					 
+				}else{
 					p.println("Invalid T_ID or Password");
 					 rd=request.getRequestDispatcher("login.jsp");
 					rd.include(request, response);
+				}
 			}else{
 				rd=request.getRequestDispatcher("adminProfile.jsp");
 				rd.include(request, response);
@@ -67,6 +78,7 @@ public class login extends HttpServlet {
 				
 		} catch (Exception e) {
 			p.println("Invalid ID or Password");
+			System.out.println("login.java catch");
 			rd=request.getRequestDispatcher("login.jsp");
 			rd.include(request, response);
 			e.printStackTrace();

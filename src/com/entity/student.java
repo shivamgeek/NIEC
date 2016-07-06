@@ -1,4 +1,5 @@
 package com.entity;
+import java.io.PrintWriter;
 import java.sql.*;
 
 import java.util.HashMap;
@@ -8,13 +9,13 @@ public class student {
 	public String s_roll,s_name,s_password,s_branch,s_section,s_semester,s_address,s_phone,
 	s_email,s_gender,s_hexcode,s_otherFriendList,s_teacherList,s_pendingList,s_sentList,s_aboutMe,s_society;
 	//Image s_profilePic;
-	decodingStudent ds;
-	studentDatabase sd;
-	achievementDatabase acd;
-	noticeDatabase nd;
-	academicsDatabase ad;
-	marksDatabase md;
-	teacherDatabase td;
+	public decodingStudent ds;
+	public studentDatabase sd;
+	public achievementDatabase acd;
+	public noticeDatabase nd;
+	public academicsDatabase ad;
+	public marksDatabase md;
+	public teacherDatabase td;
 	
 	public student(String roll) throws Exception{
 		
@@ -24,6 +25,7 @@ public class student {
 		 md=new marksDatabase();
 		ad=new academicsDatabase(); 
 		ds=new decodingStudent();
+		nd=new noticeDatabase();
 		ResultSet rs=sd.fetchAll(roll,ds.branchName(ds.findBranchFromRoll(roll)));
 		s_roll=rs.getString("S_ROLL");
 		s_name=rs.getString("S_NAME");
@@ -51,7 +53,7 @@ public class student {
 		acd.showAchievement(s_roll);
 	}
 	
-	public HashMap<String,String> showFriends() throws Exception{
+	/*public HashMap<String,String> showFriends() throws Exception{
 		
 		HashMap<String,String> hm=new HashMap<String,String>();
 		System.out.println("Roll- "+s_roll);
@@ -62,7 +64,7 @@ public class student {
 		System.out.println("friendList- "+list);
 		 ds.decodeStudentList(list,false,this,hm);
 		 return hm;
-		}
+		}*/
 	
 	
 	
@@ -71,7 +73,7 @@ public class student {
 		if(friendRoll.charAt(0)=='|'){
 			//friendRoll=||24
 			sd.insertSentList(s_roll,friendRoll,s_branch);   //for sending request to a teacher
-			sd.insertPendingList(friendRoll,s_hexcode,ds.branchName(ds.findBranchFromRoll(friendRoll)));//for sending request to a teacher
+			td.addPendingList(friendRoll,s_hexcode);//for sending request to a teacher
 		}
 		else{
 			//friendRoll=01215602713
@@ -86,12 +88,14 @@ public class student {
 	public void acceptFriendRequest(String friendRoll) throws Exception{
 		if(friendRoll.charAt(0)=='|'){
 			//friendRoll=||24
-			sd.removeSentList(friendRoll,s_hexcode, ds.branchName(ds.findBranchFromRoll(friendRoll)));
+			td.removeSentList(friendRoll,s_hexcode);  
 			sd.removePendingList(s_roll,friendRoll,s_branch);
 			sd.addFriendToStudent(s_roll,friendRoll);
 			td.addFriendToTeacher(friendRoll,s_hexcode);
 		}
 		else{//friendRoll=01215602713
+			
+			
 			String hex=ds.rollToHex(friendRoll);
 			sd.removeSentList(friendRoll,s_hexcode, ds.branchName(ds.findBranchFromRoll(friendRoll)));
 			sd.removePendingList(s_roll,hex,s_branch);	
@@ -102,6 +106,27 @@ public class student {
 		nd.addNotice(s_name+" has Accepted your Friend Request",s_name,friendRoll,"1");
 		
 	}
+	
+	
+	public void cancelFriendRequest(String friendRoll) throws Exception{
+		if(friendRoll.charAt(0)=='|'){
+			//friendRoll=||24
+			System.out.println("student class code "+s_name);
+			sd.removeSentList(s_roll,friendRoll,s_branch);  
+			td.removePendingList(friendRoll,s_hexcode);
+		}
+		else{//friendRoll=01215602713
+			
+			String hex=ds.rollToHex(friendRoll);
+			sd.removePendingList(friendRoll,s_hexcode, ds.branchName(ds.findBranchFromRoll(friendRoll)));
+			sd.removeSentList(s_roll,hex,s_branch);	
+
+		}
+		
+		
+	}
+	
+	
 	
 	
 	public HashMap<String,String[]> showMarks(student s,String sem) throws SQLException{   //?1?12#12#23#23#45#?2?12#12#23#23#45#?3?12#12#23#23#45#?4?12#12#23#
@@ -145,6 +170,11 @@ public class student {
 	
 	public void closeConnection() throws SQLException{
 	sd.closeConnection();
+	td.closeConnection();
+	nd.closeConnection();
+	acd.closeConnection();
+	ad.closeConnection();
+	md.closeConnection();
 	}
 	
 	

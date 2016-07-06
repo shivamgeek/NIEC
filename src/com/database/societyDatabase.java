@@ -138,7 +138,7 @@ public class societyDatabase {
 		
 	}
 	
-	ResultSet fetchAll(String id) throws SQLException{
+	public ResultSet fetchAll(String id) throws SQLException{
 		
 		pst=con.prepareStatement("select * from SOCIETY where ID=?");
 		pst.setString(1, id);

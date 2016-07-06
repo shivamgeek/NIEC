@@ -28,7 +28,7 @@ public class studentDatabase {
 //**********************SELECT***********************
 	
 	public ResultSet fetchAll(String roll,String branch) throws SQLException{
-		System.out.println("fetchAll student roll- "+roll+" branch is - "+branch);
+		//System.out.println("fetchAll student roll- "+roll+" branch is - "+branch);
 	pst=con.prepareStatement("select * from STUDENT_"+branch+" where S_ROLL=?");  //add concatenation to student - csse
 		pst.setString(1,roll);
 		ResultSet rs=pst.executeQuery();
@@ -36,18 +36,19 @@ public class studentDatabase {
 		return rs;
 	}
 	
-	public String fetchOtherFriendList(String roll,String branch) throws SQLException{
+	public ResultSet fetchOtherFriendList(String roll,String branch) throws SQLException{
 
 		pst=con.prepareStatement("select S_OTHERFRIENDLIST from STUDENT_"+branch+" where S_ROLL=?");
 		pst.setString(1,roll);
 		System.out.println("Roll2- "+roll);
 		ResultSet rs=pst.executeQuery();
-		String list="";
+		rs.next();
+		/*String list="";
 		if(rs.next()){
 		 list =rs.getString("S_OTHERFRIENDLIST");
 		}
-		System.out.println("friendList is- "+list);
-		return list;
+		System.out.println("friendList is- "+list);*/
+		return rs;
 	}
 	
 	public ResultSet fetchNameRoll(String hex,String branch) throws SQLException{
@@ -72,13 +73,14 @@ public class studentDatabase {
 		return false;
 	}
 	
-	public HashMap<String,String> fetchTeacherList(String roll,String branch) throws SQLException{
+	public ResultSet fetchTeacherList(String roll,String branch) throws SQLException{
 		pst=con.prepareStatement("select S_TEACHERLIST from STUDENT_"+branch+" where S_ROLL=?");
 		pst.setString(1, roll);
-		HashMap<String,String> hm=new HashMap<String,String>();
+		
 		ResultSet rs=pst.executeQuery();
 		rs.next();
-		String tchr= rs.getString("S_TEACHERLIST");
+	/*	String tchr= rs.getString("S_TEACHERLIST");
+	 * HashMap<String,String> hm=new HashMap<String,String>();
 		System.out.println("TeacherList in Student "+tchr);
 		String temp="";
 		ResultSet rs1;
@@ -90,8 +92,8 @@ public class studentDatabase {
 			System.out.println("ID IS "+rs1.getString("T_ID"));
 			hm.put(rs1.getString("T_ID"),rs1.getString("T_NAME"));
 		}
-		System.out.println("after loop");
-		return hm;
+		System.out.println("after loop");*/
+		return rs;
 	}
 	
 	public String fetchTeacherList(String roll,String branch,Boolean val) throws SQLException{
@@ -119,11 +121,8 @@ public class studentDatabase {
 	
 	
 	public int insertPendingList(String roll,String hexcode,String branch) throws SQLException{
-		if(roll.charAt(0)=='|'){  // INSERT HEXCODE TO TEACHER PENDING LIST
-			pst=con.prepareStatement("update TEACHER set T_PENDINGLIST=concat(T_PENDINGLIST,?) where T_ID=?");
-		}else{    // INSERT HEXCODE TO STUDENT PENDING LIST
+		
 		pst=con.prepareStatement("update STUDENT_"+branch+" set S_PENDINGLIST=concat(S_PENDINGLIST,?) where S_ROLL=?");
-		}  
 		pst.setString(1,hexcode);
 		pst.setString(2,roll);
 		int result=pst.executeUpdate();
@@ -262,18 +261,21 @@ public class studentDatabase {
 	
 //********************CLASSINFO DATABASE*****************************************
 	
-	public String fetchClassFriendList(String roll,String branch,String section) throws SQLException{
+	public ResultSet fetchClassFriendList(String roll,String branch,String section) throws SQLException{
 
 		pst=con.prepareStatement("select S_CLASSFRIENDS from CLASSINFO where S_BRANCH=? and S_SECTION=?");
 		pst.setString(1,branch);
 		System.out.println("Roll1- "+roll);
 		pst.setString(2,section);
 		ResultSet rs=pst.executeQuery();
-		String list="";
+		rs.next();
+		/*String list="";
 		if(rs.next()){
 		list=rs.getString("S_CLASSFRIENDS");
 		}
-		return list;
+		return list;*/
+		return rs;
+		
 		}
 	
 	
@@ -303,31 +305,20 @@ public class studentDatabase {
 //***********************DELETE******************
 	
 	public void removeSentList(String roll,String hexcode,String branch) throws SQLException{
-		if(roll.charAt(0)=='|'){
-			pst=con.prepareStatement("select T_SENTLIST from TEACHER where T_ID=?");
-		}else{
+		
+		
 		pst=con.prepareStatement("select S_SENTLIST from STUDENT_"+branch+" where S_ROLL=?");
-		}
 		pst.setString(1, roll);
 		ResultSet rs=pst.executeQuery();
-		String list;
-		if(roll.charAt(0)=='|'){
-			list=rs.getString("T_SENTLIST");
-		}else{
-			list=rs.getString("S_SENTLIST");
-		}
+		rs.next();
 		
-		String temp="";
+		String list=rs.getString("S_SENTLIST"),temp="";
 		for(int i=0;i<list.length();i=i+4){
 			if(!list.substring(i,i+4).equals(hexcode)){
 				temp=temp+list.substring(i,i+4);
 			}
 		}
-		if(roll.charAt(0)=='|'){
-			pst=con.prepareStatement("update TEACHER set T_SENTLIST=? where T_ID=?");
-		}else{
-		  pst=con.prepareStatement("update STUDENT_"+branch+" set S_SENTLIST=? where S_ROLL=?");
-		}
+		pst=con.prepareStatement("update STUDENT_"+branch+" set S_SENTLIST=? where S_ROLL=?");
 			pst.setString(1,temp);
 			pst.setString(2, roll);
 			int result=pst.executeUpdate();
@@ -340,28 +331,20 @@ public class studentDatabase {
 		pst=con.prepareStatement("select S_PENDINGLIST from STUDENT_"+branch+" where S_ROLL=?");
 		pst.setString(1, roll);
 		ResultSet rs=pst.executeQuery();
-		String list=rs.getString("S_PENDINGLIST");
-		String temp="";
+		rs.next();
+		
+		String list=rs.getString("S_PENDINGLIST"),temp="";
 		for(int i=0;i<list.length();i=i+4){
 			if(!list.substring(i,i+4).equals(hexcode)){
 				temp=temp+list.substring(i,i+4);
 			}
-		  pst=con.prepareStatement("update STUDENT_"+branch+" set S_PENDINGLIST=? where S_ROLL=?");
+		}
+		pst=con.prepareStatement("update STUDENT_"+branch+" set S_PENDINGLIST=? where S_ROLL=?");
 			pst.setString(1,temp);
 			pst.setString(2, roll);
 			int result=pst.executeUpdate();
 			System.out.println(result+" Records Affected.");
-		}	
 	}
-
-	public String findSectionFromRoll(String roll) throws SQLException,Exception{
-		pst=con.prepareStatement("select S_SECTION from STUDENT_"+ds.branchName(ds.findBranchFromRoll(roll))
-		+" where S_ROLL=?");
-		pst.setString(1, roll);
-		ResultSet rs=pst.executeQuery();
-		return rs.getString("S_SECTION");
-	}
-	
 	
 	
 	
@@ -379,14 +362,27 @@ public class studentDatabase {
 				return true;
 			}
 			else {
-				String list=fetchOtherFriendList(s.s_roll,s.s_branch);
+				ResultSet rs=fetchOtherFriendList(s.s_roll,s.s_branch);
+				String list=rs.getString("S_OTHERFRIENDLIST");
 				String hex=ds.rollToHex(id);
 				if((!(list.indexOf(hex)==-1) && ((list.indexOf(hex)%4)==0))){
+					System.out.println("true...is friend");
 					return true;
+					
 			}
 			return false;
 			}
 		}
+	}
+	
+	public String findSectionFromRoll(String roll) throws SQLException, Exception{
+		pst=con.prepareStatement("select S_SECTION from STUDENT_"+ds.branchName(ds.findBranchFromRoll(roll))+" where S_ROLL=?");
+		pst.setString(1,roll);
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		return rs.getString("S_SECTION");
+		
+		
 	}
 	
 		
@@ -397,12 +393,12 @@ public class studentDatabase {
 		System.out.println(result+" Records Affected.");
 	}
 	
-	public HashMap<String,String> getSociety(String roll,String branch) throws SQLException{
+	public ResultSet getSociety(String roll,String branch) throws SQLException{
 		pst=con.prepareStatement("select S_SOCIETY from STUDENT_"+branch+" where S_ROLL=?");
 		HashMap<String,String> hm=new HashMap<String,String>();
 		pst.setString(1, roll); 
 		ResultSet rs=pst.executeQuery();
-		if(rs.next()){
+		/*if(rs.next()){
 		String id[]=rs.getString("S_SOCIETY").split("#");
 		if(!rs.getString("S_SOCIETY").equals("")&&(!rs.getString("S_SOCIETY").equals(" "))){
 		for(int i=0;i<id.length;i++){
@@ -412,8 +408,8 @@ public class studentDatabase {
 		}
 		}
 		}
-		return hm;
-		
+		return hm;*/
+		return rs;
 		
 	}
 	
@@ -437,6 +433,29 @@ public class studentDatabase {
 		hm.put("student",student);
 		return hm;
 	}
+	
+	public boolean isSent(String id,String roll,String branch) throws Exception{
+		pst=con.prepareStatement("select S_SENTLIST from STUDENT_"+branch+" where S_ROLL=?");
+		pst.setString(1, roll);
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		String hex="";
+		if(id.charAt(0)!='|'){
+		hex=ds.rollToHex(id);
+		}
+		String list=rs.getString("S_SENTLIST");
+		if(list.contains(hex)){
+			return true;
+		}
+		return false;
+	}
+	
+
+	
+	
+	
+	
+	
 	
 	public void closeConnection() throws SQLException{
 		pst.close();

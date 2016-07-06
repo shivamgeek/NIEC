@@ -8,11 +8,11 @@ public class teacher {
 	public String t_id,t_name,t_password,t_branch,t_phone,t_classes,t_email,t_gender,t_studentList,t_teacherList,
 	    t_pendingList,t_sentList,t_aboutMe;
 	//Image t_profilePic;      //T_ID is a 4 digit code starting with 1,2 or 3 |'s. eg.--> |||1, ||24, |224.
-	achievementDatabase acd;
-	teacherDatabase td;
-	decodingStudent ds;
-	noticeDatabase nd;
-	studentDatabase sd;
+	public achievementDatabase acd;
+	public teacherDatabase td;
+	public decodingStudent ds;
+	public noticeDatabase nd;
+	public studentDatabase sd;
 	
 	
 	public teacher(String id) throws Exception{
@@ -35,9 +35,16 @@ public class teacher {
 		t_aboutMe=rs.getString("T_ABOUTME");
 		t_gender=rs.getString("T_GENDER");
 		t_teacherList=rs.getString("T_TEACHERLIST");
-		
-		
 	}
+	
+	public teacher() throws ClassNotFoundException, Exception{
+		sd=new studentDatabase();
+		acd=new achievementDatabase();
+		nd=new noticeDatabase();
+		ds=new decodingStudent();
+		td=new teacherDatabase();
+	}
+	
 	
 	public void addAchievment(String content,String roll) throws SQLException{
 		acd.addAchievement(content,t_id,roll);
@@ -51,12 +58,25 @@ public class teacher {
 			td.addFriendToTeacher(t_id,id);
 			td.addFriendToTeacher(id,t_id);
 		}else{
-			td.removePendingList(t_id,id);
-			td.removeSentList(id,t_id);
+			td.removePendingList(t_id,ds.rollToHex(id));
+			sd.removeSentList(id,t_id,ds.branchName(ds.findBranchFromRoll(id)));
 			td.addFriendToTeacher(t_id,ds.rollToHex(id));
 			sd.addFriendToStudent(id,t_id);
 		}
 	
+	}
+	
+	
+	public void cancelFriendRequest(String roll) throws Exception{
+			
+		if(roll.charAt(0)=='|'){
+			td.removePendingList(t_id,roll);
+			td.removeSentList(roll,t_id);
+		}else{
+			td.removePendingList(t_id,ds.rollToHex(roll));
+			sd.removeSentList(roll,t_id,ds.branchName(ds.findBranchFromRoll(roll)));
+			
+		}
 	}
 	
 	
