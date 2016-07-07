@@ -70,11 +70,11 @@ public class teacher {
 	public void cancelFriendRequest(String roll) throws Exception{
 			
 		if(roll.charAt(0)=='|'){
-			td.removePendingList(t_id,roll);
-			td.removeSentList(roll,t_id);
+			td.removePendingList(roll,t_id);
+			td.removeSentList(t_id,roll);
 		}else{
-			td.removePendingList(t_id,ds.rollToHex(roll));
-			sd.removeSentList(roll,t_id,ds.branchName(ds.findBranchFromRoll(roll)));
+			sd.removePendingList(roll,t_id,ds.branchName(ds.findBranchFromRoll(roll)));
+			td.removeSentList(t_id,ds.rollToHex(roll));
 			
 		}
 	}
@@ -88,12 +88,26 @@ public class teacher {
 		td.addPendingList(id,t_id);
 		}else{
 			td.addSentList(t_id,ds.rollToHex(id));
-			td.addPendingList(id,t_id);
+			sd.insertPendingList(id,t_id,ds.branchName(ds.findBranchFromRoll(id)));
 		}
 	nd.addNotice("",t_name,id,"1");
 	}
 	   
+
+	public void closeConnection() throws SQLException{
+		if(sd!=null){
+	sd.closeConnection();
+		}if(td!=null){
+			td.closeConnection();
+		}
+		if(nd!=null){
+			nd.closeConnection();
+		}
+		if(acd!=null){
+			acd.closeConnection();
+		}
 	
+	}
 	
 	
 	

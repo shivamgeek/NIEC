@@ -434,23 +434,42 @@ public class studentDatabase {
 		return hm;
 	}
 	
-	public boolean isSent(String id,String roll,String branch) throws Exception{
+	public boolean isSent(String roll,String id) throws Exception{
+		String branch=ds.branchName(ds.findBranchFromRoll(roll));
 		pst=con.prepareStatement("select S_SENTLIST from STUDENT_"+branch+" where S_ROLL=?");
-		pst.setString(1, roll);
+		pst.setString(1,roll);
 		ResultSet rs=pst.executeQuery();
 		rs.next();
-		String hex="";
 		if(id.charAt(0)!='|'){
-		hex=ds.rollToHex(id);
+		id=ds.rollToHex(id);
 		}
 		String list=rs.getString("S_SENTLIST");
-		if(list.contains(hex)){
+		if(((list.indexOf(id))!=-1) && ((list.indexOf(id)%4)==0)){
 			return true;
 		}
 		return false;
 	}
 	
-
+	public boolean isPending(String id,String roll) throws Exception{
+		String hex=roll;
+		System.out.println("PENDING FUNTION ID- "+id);
+		String branch=ds.branchName(ds.findBranchFromRoll(id));
+		System.out.println("PENDING FUNTION BRANCH- "+branch);
+		if(roll.charAt(0)!='|'){
+			hex=ds.rollToHex(roll);
+		}
+		pst=con.prepareStatement("select S_PENDINGLIST from STUDENT_"+branch+" where S_ROLL=?");
+		pst.setString(1,id);
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		String list=rs.getString("S_PENDINGLIST");
+		if(((list.indexOf(hex))!=-1) && ((list.indexOf(hex)%4)==0)){
+			return true;
+		}
+		return false;
+	}
+	
+	
 	
 	
 	
@@ -458,8 +477,11 @@ public class studentDatabase {
 	
 	
 	public void closeConnection() throws SQLException{
+		if(pst!=null){
 		pst.close();
+		}if(con!=null){
 		con.close();
+		}
 	}
 	
 	

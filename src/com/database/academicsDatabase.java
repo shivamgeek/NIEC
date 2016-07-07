@@ -79,8 +79,11 @@ public class academicsDatabase {
 	}
 	
 	public void closeConnection() throws SQLException{
+		if(pst!=null){
 		pst.close();
+		}if(con!=null){
 		con.close();
+		}
 	}
 	
 	

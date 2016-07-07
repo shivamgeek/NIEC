@@ -86,9 +86,12 @@ public class sendRequest extends HttpServlet {
 				}
 		}
 		}
-		
-	 
-
+	if(s!=null){	
+	 s.closeConnection();
+	}
+	if(t!=null){
+	 t.closeConnection();
+	}
 }catch(Exception e){
 			 PrintWriter p=response.getWriter();
 				p.println("Some error occured in getting data");

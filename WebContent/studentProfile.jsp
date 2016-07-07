@@ -7,18 +7,21 @@
 <title>Insert title here</title>
 </head>
 <body>
-<h3>New Student Profile Page</h3><br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="logout">LOGOUT</a>
+<h3>New Student Profile Page</h3><br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="logout">LOGOUT</a><br>
+<a href="studentProfile.jsp">PROFILE</a>
 <%
 String who="";
 HttpSession se=request.getSession(false);
 Boolean profile=true;
-String roll="",branch="";
+String roll="",branch="",me="",br="";
 ResultSet rs=null;
 societyDatabase sod=new societyDatabase();
 String pending="",sent="";
 student s=null;
 if(se.getAttribute("id")!=null){
-	roll=se.getAttribute("id").toString();branch=se.getAttribute("branch").toString();
+	roll=se.getAttribute("id").toString();
+	System.out.println("Student profile 1 "+ roll);
+	me=roll;br=branch;
 }else{
 	response.sendRedirect("login.jsp");
 }
@@ -28,37 +31,80 @@ try{
 	
 	
 if(request.getParameter("who")!=null){
-	
+	System.out.println("Student profile 2 "+ request.getParameter("who"));
+	// ROLL/WHO is myself as student and me is visitor
 	if(!roll.equals(request.getParameter("who"))){
-		
-		s=new student(roll);
 		roll=request.getParameter("who");
-	    profile=false;
+		s=new student(roll);
+		 profile=false;
 	}else{
 		s=new student(roll);
 	}
 }else{
 	s=new student(roll);
 }
-	    
+	  branch=s.ds.branchName(s.ds.findBranchFromRoll(roll));  
 	rs=s.sd.fetchAll(roll,branch);
  pending=rs.getString("S_PENDINGLIST");
  sent=rs.getString("S_SENTLIST");
 System.out.println("profile is "+rs.getString("S_NAME"));
  
- if(!profile && !s.sd.isFriend(s,roll)){
+ if(!profile && !s.sd.isFriend(s,me)){ 
 	 System.out.println("1st");
-	 if(!s.sd.isSent(roll,s.s_roll, branch)){
-		 System.out.println("2nd"); 
+	 if(me.charAt(0)=='|'){
+		 System.out.println("Student profile 3 "+ me);
+		 if(!s.sd.isSent(roll,me) && !s.sd.isPending(roll,me)){  //TEACHER
+			 System.out.println("Student profile 4 "+ roll);
+			 %>Trying to send request
+				<form action="sendRequest">
+				<input type="hidden" value="<%=roll%>" name="who">
+					 <input type="hidden" name="soc" value="s">
+				<input type="submit" value="Send Friend Request">
+				</form>
+				<%
+				
+		 }
+		 else if(s.sd.isSent(roll,me)){  
+			 %>
+				<form action="acceptRequest" > <input type="submit" value="Accept Request">
+			<input type="hidden" name="who" value="<%=roll%>">
+				</form>
+		 <% 
+		 }
+		 else{
+			 %>
+			 <form action="sendRequest">
+			 <input type="hidden" name="soc" value="c">
+			<input type="hidden" value="<%=roll%>" name="who">
+			<input type="submit" value="Cancel Friend Request">
+			</form>
+			 <%
+			 
+		 }
+	 }
+	 else if(!s.sd.isSent(roll,me) && !s.sd.isPending(roll,me)){
+		 
+		 %>Trying to send request
+			<form action="sendRequest">
+			<input type="hidden" value="<%=roll%>" name="who">
+				 <input type="hidden" name="soc" value="s">
+			<input type="submit" value="Send Friend Request">
+			</form>
+			<% 
+		 
+	 }
 	 
-	%>Trying to send request
-	<form action="sendRequest">
-	<input type="hidden" value="<%=roll%>" name="who">
-		 <input type="hidden" name="soc" value="s">
-	<input type="submit" value="Send Friend Request">
-	</form>
-	<% 
-	 }else{ 
+	 else if(s.sd.isPending(me,roll)){  
+		 %>
+			<form action="acceptRequest" > <input type="submit" value="Accept Request">
+		<input type="hidden" name="who" value="<%=roll%>">
+			</form>
+	 <% 
+	 }
+	 
+	 
+	 
+	else{ 
 	 System.out.println("3rd");%>
 	 <form action="sendRequest">
 	 <input type="hidden" name="soc" value="c">
@@ -68,6 +114,9 @@ System.out.println("profile is "+rs.getString("S_NAME"));
 	 <%
 	 }
  }
+	 
+ 
+ 
  
 %><br>
 <h4>Basic Info</h4><br>
@@ -250,13 +299,19 @@ Select Semester<select name="semester">
 				
 <a href="teacherProfile.jsp?who=<%=rs.getString(idt).substring(1,4)%>" ><%=rs.getString("T_NAME") %></a>
 
-<form action="acceptRequest" > <input type="submit" value="Accept Request"></form>	<br>	
+<form action="acceptRequest" > <input type="submit" value="Accept Request">
+<input type="hidden" name="who" value="<%= rs.getString(idt)%>">
+
+
+</form>	<br>	
 		<%
 			}else{
 				rs=s.sd.fetchAll(s.ds.hexToRoll(temp),s.ds.branchName(s.ds.findBranchFromRoll(s.ds.hexToRoll(temp))));
 				%>
 	<a href="studentProfile.jsp?who=<%=rs.getString(ids)%>" ><%=rs.getString("S_NAME") %></a> 
-	<form action="acceptRequest" > <input type="submit" value="Accept Request"></form>	<br>			
+	<form action="acceptRequest" > <input type="submit" value="Accept Request">
+	<input type="hidden" name="who" value="<%= rs.getString(ids)%>">
+	</form>	<br>			
 				<%
 			}
 		}
@@ -303,29 +358,15 @@ try{
 
 }
 
-/*
+try{
 if(s!=null){
 s.closeConnection();
 }
-try{
-if(sd!=null){
-	sd.closeConnection();
-}
- if(td!=null){
-	td.closeConnection();
-} 
-if(nd!=null){
-	nd.closeConnection();
-}if(ad!=null){
-	ad.closeConnection();
-}
-if(sod!=null){
-	sod.closeConnection();
-}
+
 }catch(Exception e){
 	out.println("Sorry error occured");e.printStackTrace();
 	}
- */
+ 
 
 
  %><br><br>

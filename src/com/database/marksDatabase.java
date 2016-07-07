@@ -61,10 +61,12 @@ public class marksDatabase {
 		}
 		return "";
 	}
-	
 	public void closeConnection() throws SQLException{
+		if(pst!=null){
 		pst.close();
+		}if(con!=null){
 		con.close();
+		}
 	}
 	
 	

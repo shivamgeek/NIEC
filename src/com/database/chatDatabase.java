@@ -39,8 +39,11 @@ public class chatDatabase {
 	
 	
 	public void closeConnection() throws SQLException{
+		if(pst!=null){
 		pst.close();
+		}if(con!=null){
 		con.close();
+		}
 	}
 	
 	public String showMembers(String id) throws SQLException{

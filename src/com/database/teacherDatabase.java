@@ -112,11 +112,12 @@ public class teacherDatabase {
 		return rs.getString("T_TEACHERLIST");
 	}
 	
-	public Boolean isFriend(String id,String friendId) throws SQLException{
+	public Boolean isFriend(String id,String friendId) throws Exception{
 		String list;
 		if(friendId.charAt(0)=='|'){   //TEACHER
 			list=fetchTeacherList(id);
 		}else{
+			friendId=ds.rollToHex(friendId);
 		list=fetchStudentList(id);
 		}
 		if(((list.indexOf(friendId))!=-1) && ((list.indexOf(friendId)%4)==0)){
@@ -214,7 +215,10 @@ public class teacherDatabase {
 	
 	
 	public boolean isPending(String id,String roll) throws Exception{
-		String hex=ds.rollToHex(roll);
+		String hex=roll;
+		if(roll.charAt(0)!='|'){
+			hex=ds.rollToHex(roll);
+		}
 		pst=con.prepareStatement("select T_PENDINGLIST from TEACHER where T_ID=?");
 		pst.setString(1,id);
 		ResultSet rs=pst.executeQuery();
@@ -231,6 +235,10 @@ public class teacherDatabase {
 		pst.setString(1, id);
 		ResultSet rs=pst.executeQuery();
 		rs.next();
+		if(fid.charAt(0)!='|'){
+			fid=ds.rollToHex(fid);
+		}
+		
 		String list=rs.getString("T_SENTLIST");
 		
 		if(((list.indexOf(fid))!=-1) && ((list.indexOf(fid)%4)==0)){
@@ -241,15 +249,12 @@ public class teacherDatabase {
 	
 	
 	
-	
-	
-	
-	
-	
-	
 	public void closeConnection() throws SQLException{
+		if(pst!=null){
 		pst.close();
+		}if(con!=null){
 		con.close();
+		}
 	}
 	
 	

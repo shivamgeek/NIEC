@@ -13,7 +13,7 @@
 <%
 Boolean profile=true;
 HttpSession se=request.getSession(false);
-String id="",me="";
+String id="",me="",pending="",sent="";
 if(se.getAttribute("id")!=null){
  id=se.getAttribute("id").toString();
  me=id;
@@ -33,6 +33,8 @@ if(request.getParameter("who")!=null){
 	}
 	}
 
+//ID/who--> myself as teacher T_ID     ME--> visitor  ROLL NO
+
 
 teacher t=null;
 studentDatabase sd=new studentDatabase();
@@ -41,20 +43,63 @@ noticeDatabase nd=new noticeDatabase();
 achievementDatabase ad=new achievementDatabase();
 try{
 t=new teacher(id);
-
-if(!profile && !td.isFriend(who,me)){
+//ID/who--> myself as teacher T_ID     ME--> visitor  ROLL NO
+if(!profile && !td.isFriend(id,me)){
 	 System.out.println("1st");
-	 if(!td.isPending(who,me)){       //if who is techer then okkk
-		 System.out.println("2nd"); 
+	 if(me.charAt(0)=='|'){
+		 if(!td.isSent(id,me) &&  !td.isPending(id,me)){  //TEACHER
+			//me bhutta   id--uma mam
+			 %>
+				<form action="sendRequest">
+				<input type="hidden" value="<%=id%>" name="who">
+					 <input type="hidden" name="soc" value="s">
+				<input type="submit" value="Send Friend Request">
+				</form>
+				<%
+				
+		 }
+		 else if(td.isSent(id,me)){     //td.isPending(me,id)
+			 
+			 %>
+				<form action="acceptRequest" > <input type="submit" value="Accept Request">
+			<input type="hidden" name="who" value="<%=id%>">
+				</form>
+		 <% 
+		 }
+		 
+		 else{
+			 %>
+			 <form action="sendRequest">
+			 <input type="hidden" name="soc" value="c">
+			<input type="hidden" value="<%=id%>" name="who">
+			<input type="submit" value="Cancel Friend Request">
+			</form>
+			 <%
+			 
+		 }
+	 }
+	 else if(!td.isSent(id,me) &&  !td.isPending(id,me)){
+		 
+		 %>Trying to send request
+			<form action="sendRequest">
+			<input type="hidden" value="<%=id%>" name="who">
+				 <input type="hidden" name="soc" value="s">
+			<input type="submit" value="Send Friend Request">
+			</form>
+			<% 
+		 
+	 }
 	 
-	%>Trying to send request
-	<form action="sendRequest">
-	<input type="hidden" value="<%=id%>" name="who">
-		 <input type="hidden" name="soc" value="s">
-	<input type="submit" value="Send Friend Request">
-	</form>
-	<% 
-	 }else{ 
+	 else if(td.isSent(id,me)){           //td.isPending(me,id)
+		 
+		 %>
+			<form action="acceptRequest" > <input type="submit" value="Accept Request">
+		<input type="hidden" name="who" value="<%=id%>">
+			</form>
+	 <% 
+	 }
+	 
+	else{ 
 	 System.out.println("3rd");%>
 	 <form action="sendRequest">
 	 <input type="hidden" name="soc" value="c">
@@ -64,15 +109,14 @@ if(!profile && !td.isFriend(who,me)){
 	 <%
 	 }
 }
-
-
-
-
-
+	
+ 
 
  rs=td.fetchAll(id);
  tid=rs.getString("T_ID");
 tnme=rs.getString("T_NAME");
+pending=rs.getString("T_PENDINGLIST");
+sent=rs.getString("T_SENTLIST");
 se.setAttribute("name",tnme);
 %><br>
 <h4>Basic Info</h4><br>
@@ -157,10 +201,86 @@ while(rs.next()){
 <input type="submit" value="Add Achevement"> </form><br>
 <form action="teacherMarks.jsp">
 <input type="submit" value="Show/Update Marks"> </form>
+
+
+
+<br><br>
+	<h4>Pending List</h4><br>
+	
+	<%
+	String temp="";
+	try{
+		String idt="T_ID";
+		String ids="S_ROLL";
+		for(int i=0;i<pending.length();i=i+4){
+			temp=pending.substring(i,i+4);
+			if(temp.charAt(0)=='|'){
+				rs=td.fetchAll(temp);
+				%>
+				
+<a href="teacherProfile.jsp?who=<%=rs.getString(idt).substring(1,4)%>" ><%=rs.getString("T_NAME") %></a>
+
+<form action="acceptRequest" > <input type="submit" value="Accept Request">
+<input type="hidden" name="who" value="<%= rs.getString(idt)%>">
+
+
+</form>	<br>	
+		<%
+			}else{
+				rs=sd.fetchAll(ds.hexToRoll(temp),ds.branchName(ds.findBranchFromRoll(ds.hexToRoll(temp))));
+				%>
+	<a href="studentProfile.jsp?who=<%=rs.getString(ids)%>" ><%=rs.getString("S_NAME") %></a> 
+	<form action="acceptRequest" > <input type="submit" value="Accept Request">
+	<input type="hidden" name="who" value="<%= rs.getString(ids)%>">
+	</form>	<br>			
+				<%
+			}
+		}
+%>
+
+ <% 
+	}catch(Exception e){
+		out.println("Sorry No Pending List");e.printStackTrace();
+		}
+	%>
+	
+<h4>Sent List</h4>	<br>
 <%
+try{
+	 temp="";
+
+	String idt="T_ID";
+	String ids="S_ROLL";
+	for(int i=0;i<sent.length();i=i+4){
+		temp=sent.substring(i,i+4);
+		if(temp.charAt(0)=='|'){
+			rs=td.fetchAll(temp);
+			%>
+			
+<a href="teacherProfile.jsp?who=<%=rs.getString(idt).substring(1,4)%>" ><%=rs.getString("T_NAME") %></a> <br>			
+	<%
+		}else{
+			rs=sd.fetchAll(ds.hexToRoll(temp),ds.branchName(ds.findBranchFromRoll(ds.hexToRoll(temp))));
+			%>
+<a href="studentProfile.jsp?who=<%=rs.getString(ids)%>" ><%=rs.getString("S_NAME") %></a> <br>			
+			<%
+		}
+	}
+%>
+
+
+	
+<%	
+}catch(Exception e){
+	out.println("Sorry No Pending List");e.printStackTrace();
+	}
+
+
+
+
 }
 
-/* if(sd!=null){
+if(sd!=null){
 	sd.closeConnection();
 }
 if(td!=null){
@@ -172,7 +292,7 @@ if(nd!=null){
 	ad.closeConnection();
 }
 
- */ %>
+  %>
 
 
 

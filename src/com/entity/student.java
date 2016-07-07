@@ -169,12 +169,27 @@ public class student {
 	}
 	
 	public void closeConnection() throws SQLException{
-	sd.closeConnection();
-	td.closeConnection();
-	nd.closeConnection();
-	acd.closeConnection();
-	ad.closeConnection();
-	md.closeConnection();
+	
+		if(sd!=null){
+			sd.closeConnection();
+				}if(td!=null){
+					td.closeConnection();
+				}
+				if(nd!=null){
+					nd.closeConnection();
+				}
+				if(acd!=null){
+					acd.closeConnection();
+				}
+		if(ad!=null){
+			ad.closeConnection();
+		}
+		if(md!=null){
+			md.closeConnection();
+		}
+		
+	
+	
 	}
 	
 	

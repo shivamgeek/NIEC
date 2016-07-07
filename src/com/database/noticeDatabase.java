@@ -57,10 +57,12 @@ public class noticeDatabase {
 		int result=pst.executeUpdate();
 		System.out.println(result+" Records Affected.");
 	}
-	
 	public void closeConnection() throws SQLException{
+		if(pst!=null){
 		pst.close();
+		}if(con!=null){
 		con.close();
+		}
 	}
 	
 	
