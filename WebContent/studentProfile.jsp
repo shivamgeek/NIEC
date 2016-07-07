@@ -8,9 +8,9 @@
 </head>
 <body>
 <h3>New Student Profile Page</h3><br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a href="logout">LOGOUT</a><br>
-<a href="studentProfile.jsp">PROFILE</a>
+<a href="studentProfile.jsp">Go to PROFILE</a>
 <%
-String who="";
+String who="",chatGroups="";
 HttpSession se=request.getSession(false);
 Boolean profile=true;
 String roll="",branch="",me="",br="";
@@ -20,7 +20,6 @@ String pending="",sent="";
 student s=null;
 if(se.getAttribute("id")!=null){
 	roll=se.getAttribute("id").toString();
-	System.out.println("Student profile 1 "+ roll);
 	me=roll;br=branch;
 }else{
 	response.sendRedirect("login.jsp");
@@ -31,7 +30,6 @@ try{
 	
 	
 if(request.getParameter("who")!=null){
-	System.out.println("Student profile 2 "+ request.getParameter("who"));
 	// ROLL/WHO is myself as student and me is visitor
 	if(!roll.equals(request.getParameter("who"))){
 		roll=request.getParameter("who");
@@ -47,14 +45,11 @@ if(request.getParameter("who")!=null){
 	rs=s.sd.fetchAll(roll,branch);
  pending=rs.getString("S_PENDINGLIST");
  sent=rs.getString("S_SENTLIST");
-System.out.println("profile is "+rs.getString("S_NAME"));
- 
+ chatGroups=rs.getString("CHATID");
  if(!profile && !s.sd.isFriend(s,me)){ 
-	 System.out.println("1st");
+	 
 	 if(me.charAt(0)=='|'){
-		 System.out.println("Student profile 3 "+ me);
 		 if(!s.sd.isSent(roll,me) && !s.sd.isPending(roll,me)){  //TEACHER
-			 System.out.println("Student profile 4 "+ roll);
 			 %>Trying to send request
 				<form action="sendRequest">
 				<input type="hidden" value="<%=roll%>" name="who">
@@ -105,7 +100,7 @@ System.out.println("profile is "+rs.getString("S_NAME"));
 	 
 	 
 	else{ 
-	 System.out.println("3rd");%>
+	 %>
 	 <form action="sendRequest">
 	 <input type="hidden" name="soc" value="c">
 	<input type="hidden" value="<%=roll%>" name="who">
@@ -220,8 +215,12 @@ if(profile){
 		roll1=s.ds.hexToRoll(list.substring(i,i+4));
 		rs=s.sd.fetchAll(roll1, s.ds.branchName(s.ds.findBranchFromRoll(roll1)));
 	%>
-		<a href="studentProfile.jsp?who=<%=rs.getString(sr)%>" ><%=rs.getString("S_NAME") %></a> <br>
-		
+		<a href="studentProfile.jsp?who=<%=rs.getString(sr)%>" ><%=rs.getString("S_NAME") %></a><%if(profile){ %>
+		&nbsp<form action="removeFriend">
+		<input type="hidden" name="friend" value="<%=rs.getString(sr)%>">
+		<input type="submit" value="Remove Friend"></form>
+		<%} %>
+		<br>
 		
 	<%
 	}
@@ -243,7 +242,12 @@ e.printStackTrace();
 		for(int i=0;i<tchr.length();i=i+4){
 			rs=s.td.fetchAll(tchr.substring(i,i+4));
 			%>
-		<a href="teacherProfile.jsp?who=<%=rs.getString(idt).substring(1,4)%>" ><%=rs.getString("T_NAME") %></a> <br>
+		<a href="teacherProfile.jsp?who=<%=rs.getString(idt).substring(1,4)%>" ><%=rs.getString("T_NAME") %></a><%if(profile){ %>
+		&nbsp<form action="removeFriend">
+		<input type="hidden" name="friend" value="<%=rs.getString(idt)%>">
+		<input type="submit" value="Remove Friend"></form>
+		<%} %>
+		 <br>
 		<%}
 }
 	catch(Exception e){
@@ -252,20 +256,29 @@ e.printStackTrace();
 
 %><br><br>
 
-<h4>Notice</h4><br> 
+<h4>Notice</h4> 
 <% try{
  rs=s.nd.showNoticeStudent(s);
+ %>
+ <table border="3">
+ <tr><th>Notice ID-</th><th>Notice Content</th><th>Notice Sender</th><th>Notice Reciever</th>
+ <th>Notice approve</th></tr>
+ <% 
 while(rs.next()){
-	%><br>
-<br>Notice ID- <%=rs.getString("ID") %><br>Notice Content- <%=rs.getString("CONTENT") %><br>Notice Sender- <%=rs.getString("SENDER") %>
-<br>Notice Reciever -<%=rs.getString("RECEIVER") %><br> Notice approve- <%=rs.getString("APPROVE") %>
+	%>
+ <tr><td><%=rs.getString("ID")%></td> <td><%=rs.getString("CONTENT") %></td>  <td><%=rs.getString("SENDER") %></td>
+
+ <td>-<%=rs.getString("RECEIVER") %></td> <td> <%=rs.getString("APPROVE") %></td></tr>
 	
 <%
 }
+%></table>
+<% 
+ 
 }catch(Exception e){
 out.println("Sorry No New Notices");e.printStackTrace();
 }
-%><br><br>
+%><br>
  <br>
 <h4>Academics</h4><br>
 <form action="studentMarks.jsp">
@@ -353,10 +366,33 @@ try{
 }catch(Exception e){
 	out.println("Sorry No Pending List");e.printStackTrace();
 	}
-
-
-
+try{
+%>
+<br><br><h4>Chat Groups</h4><br>
+<%
+String cid[]=chatGroups.split("#"),chatid="CHATID";
+for(int i=0;i<cid.length && !chatGroups.equals("");i++){
+	rs=s.cd.fetchAll(cid[i]); 
+	%>
+	<a href="chatScreen.jsp?cid=<%=rs.getString(chatid)%>"><%=rs.getString("NAME") %></a><br>
+	<form action="removeChat"> <input type="submit" value="Leave Group"> 
+	<input type="hidden" name="cid" value="<%=rs.getString(chatid)%>" > </form>
+	
+	
+	<%
 }
+%>
+<h4>Create a New Chat Room</h4>
+<a href="insertChatRoom.jsp">Create</a>
+
+<%
+}catch(Exception e){
+	out.println("Error in getting chat groups ");e.printStackTrace();
+	}
+
+
+
+}  //FOR PROFILE ENDED
 
 try{
 if(s!=null){

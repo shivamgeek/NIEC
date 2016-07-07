@@ -16,9 +16,10 @@ public class student {
 	public academicsDatabase ad;
 	public marksDatabase md;
 	public teacherDatabase td;
+	public chatRoomDatabase cd;
 	
 	public student(String roll) throws Exception{
-		
+		cd=new chatRoomDatabase();
 		 sd=new studentDatabase();
 		 acd=new achievementDatabase();
 		 td=new teacherDatabase();
@@ -186,6 +187,10 @@ public class student {
 		}
 		if(md!=null){
 			md.closeConnection();
+		}
+		if(cd!=null){
+			
+			cd.closeConnection();
 		}
 		
 	

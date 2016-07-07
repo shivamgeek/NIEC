@@ -13,7 +13,7 @@
 <%
 Boolean profile=true;
 HttpSession se=request.getSession(false);
-String id="",me="",pending="",sent="";
+String id="",me="",pending="",sent="",chatGroups="";
 if(se.getAttribute("id")!=null){
  id=se.getAttribute("id").toString();
  me=id;
@@ -45,7 +45,6 @@ try{
 t=new teacher(id);
 //ID/who--> myself as teacher T_ID     ME--> visitor  ROLL NO
 if(!profile && !td.isFriend(id,me)){
-	 System.out.println("1st");
 	 if(me.charAt(0)=='|'){
 		 if(!td.isSent(id,me) &&  !td.isPending(id,me)){  //TEACHER
 			//me bhutta   id--uma mam
@@ -100,7 +99,7 @@ if(!profile && !td.isFriend(id,me)){
 	 }
 	 
 	else{ 
-	 System.out.println("3rd");%>
+%>
 	 <form action="sendRequest">
 	 <input type="hidden" name="soc" value="c">
 	<input type="hidden" value="<%=id%>" name="who">
@@ -114,6 +113,7 @@ if(!profile && !td.isFriend(id,me)){
 
  rs=td.fetchAll(id);
  tid=rs.getString("T_ID");
+ chatGroups=rs.getString("CHATID");
 tnme=rs.getString("T_NAME");
 pending=rs.getString("T_PENDINGLIST");
 sent=rs.getString("T_SENTLIST");
@@ -143,7 +143,11 @@ if(list.length()>3){
 for(int i=0;i<list.length();i=i+4){
 	rs=sd.fetchAll(ds.hexToRoll(list.substring(i,i+4)),ds.branchName(ds.findBranchFromRoll(ds.hexToRoll((list.substring(i,i+4))))));
 	%>
-		<a href="studentProfile.jsp?who=<%=rs.getString(sr)%>" ><%=rs.getString("S_NAME") %></a> <br> 
+		<a href="studentProfile.jsp?who=<%=rs.getString(sr)%>" ><%=rs.getString("S_NAME") %></a></a><%if(profile){ %>
+		&nbsp<form action="removeFriend">
+		<input type="hidden" name="friend" value="<%=rs.getString(sr)%>">
+		<input type="submit" value="Remove Friend"></form>
+		<%} %> <br> 
 <%	
 }
  }	}catch(Exception e){
@@ -167,7 +171,11 @@ for(int i=0;i<list.length();i=i+4){
 	for(int i=0;i<list.length();i=i+4){
 		rs=td.fetchAll(list.substring(i,i+4));
 		%>
-			<a href="teacherProfile.jsp?who=<%=rs.getString(idt).substring(1,4)%>" ><%=rs.getString("T_NAME") %></a> <br>
+			<a href="teacherProfile.jsp?who=<%=rs.getString(idt).substring(1,4)%>" ><%=rs.getString("T_NAME") %></a>&nbsp
+		<form action="removeFriend">
+		<input type="hidden" name="friend" value="<%=rs.getString(idt)%>">
+		<input type="submit" value="Remove Friend"></form>
+		 <br>
 	<%	
 	}
 	 }}catch(Exception e){
@@ -177,23 +185,29 @@ for(int i=0;i<list.length();i=i+4){
 	
 
 %>
-<h4>Notice</h4>
-<%
-try{
- rs=nd.showNoticeTeacher(t);
+<h4>Notice</h4> 
+<% try{
+ rs=t.nd.showNoticeTeacher(t);
+ %>
+ <table border="3">
+ <tr><th>Notice ID-</th><th>Notice Content</th><th>Notice Sender</th><th>Notice Reciever</th>
+ <th>Notice approve</th></tr>
+ <% 
 while(rs.next()){
-	%><br>
-<br>Notice ID- <%=rs.getString("ID") %><br>Notice Content- <%=rs.getString("CONTENT") %><br>Notice Sender- <%=rs.getString("SENDER") %>
-<br>Notice Reciever -<%=rs.getString("RECEIVER") %><br> Notice approve- <%=rs.getString("APPROVE") %>
+	%>
+ <tr><td><%=rs.getString("ID")%></td> <td><%=rs.getString("CONTENT") %></td>  <td><%=rs.getString("SENDER") %></td>
+
+ <td>-<%=rs.getString("RECEIVER") %></td> <td> <%=rs.getString("APPROVE") %></td></tr>
 	
 <%
 }
+%></table>
+<% 
+ 
 }catch(Exception e){
-	 out.println("Sorry No Notices");
-	 e.printStackTrace();
-	 }
-//end of profile
-%><br><br>
+out.println("Sorry No New Notices");e.printStackTrace();
+}
+%><br>
 <form action="noticeTeacher.jsp">
 <input type="submit" value="Add Notice"> </form>
 <br>
@@ -274,6 +288,32 @@ try{
 }catch(Exception e){
 	out.println("Sorry No Pending List");e.printStackTrace();
 	}
+
+%>
+<br><br><h4>Chat Groups</h4><br>
+<%
+try{
+String cid[]=chatGroups.split("#"),chatid="CHATID";
+for(int i=0;i<cid.length && !chatGroups.equals("");i++){
+	rs=t.cd.fetchAll(cid[i]); 
+	%>
+	<a href="chatScreen.jsp?cid=<%=rs.getString(chatid)%>"><%=rs.getString("NAME") %></a><br>
+	<form action="removeChat"> <input type="submit" value="Leave Group"> 
+	<input type="hidden" name="cid" value="<%=rs.getString(chatid)%>" > </form>
+	
+	
+	<%
+}
+%>
+<h4>Create a New Chat Room</h4>
+<a href="insertChatRoom.jsp">Create</a>
+
+<%
+}catch(Exception e){
+	out.println("Error in getting chat groups ");e.printStackTrace();
+	}
+
+
 
 
 

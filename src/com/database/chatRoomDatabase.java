@@ -48,20 +48,22 @@ public class chatRoomDatabase {
 	}
 	
 	public void addMemberToChat(String hex,String id) throws Exception{
-
+		if(hex.length()==4){
 		pst=con.prepareStatement("update CHATROOMS set MEMBERLIST=concat(MEMBERLIST,?) where CHATID=?");
 		pst.setString(1, hex);
 		pst.setString(2, id);
 		int result=pst.executeUpdate();
 		System.out.println(result +" Records Affected");
 		addChatIdToMember(hex,id);
+		}
 	}
 	
 	public void addChatIdToMember(String hex,String id) throws Exception{
-		String branch=ds.branchName(ds.findBranchFromRoll(ds.hexToRoll(hex)));
+		
 		if(hex.charAt(0)=='|'){
 			pst=con.prepareStatement("update TEACHER set CHATID=concat(CHATID,?) where T_ID=?");
 		}else{
+			String branch=ds.branchName(ds.findBranchFromRoll(ds.hexToRoll(hex)));
 		pst=con.prepareStatement("update STUDENT_"+branch+" set CHATID=concat(CHATID,?) where S_HEXCODE=?");
 		}
 		pst.setString(1,id+"#");
@@ -88,7 +90,7 @@ public class chatRoomDatabase {
 		
 	}
 	
-	public void removeMember(String hex,String id) throws Exception{
+	public void removeMember(String id,String hex) throws Exception{
 
 		pst=con.prepareStatement("select MEMBERLIST from CHATROOMS where CHATID=?");
 		pst.setString(1, id);
@@ -107,10 +109,11 @@ public class chatRoomDatabase {
 		int result=pst.executeUpdate();
 		System.out.println(result +" Records Affected");
 		
-		String branch=ds.branchName(ds.findBranchFromRoll(ds.hexToRoll(hex)));
+		String branch="";
 		if(hex.charAt(0)=='|'){
 			pst=con.prepareStatement("select CHATID from TEACHER where T_ID=?");
 		}else{
+			branch=ds.branchName(ds.findBranchFromRoll(ds.hexToRoll(hex)));
 			pst=con.prepareStatement("select CHATID from STUDENT_"+branch+" where S_HEXCODE=?");
 		}
 		pst.setString(1, hex);
@@ -124,7 +127,7 @@ public class chatRoomDatabase {
 			}
 		}
 		if(hex.charAt(0)=='|'){
-			pst=con.prepareStatement("updateTEACHER set CHATID=? where T_ID=?");
+			pst=con.prepareStatement("update TEACHER set CHATID=? where T_ID=?");
 		}else{
 			pst=con.prepareStatement("update STUDENT_"+branch+" set CHATID=? where S_HEXCODE=?");
 		}
@@ -133,8 +136,18 @@ public class chatRoomDatabase {
 		pst.setString(2,hex);
 		result=pst.executeUpdate();
 		System.out.println(result +" Records Affected");
+		deleteChat(id);
 		
 	}
+	
+	public ResultSet fetchAll(String id) throws SQLException{
+		pst=con.prepareStatement("select * from CHATROOMS where CHATID=?");
+		pst.setString(1, id);
+		ResultSet rs=pst.executeQuery();
+		rs.next();
+		return rs;
+	}
+	
 	
 	public void closeConnection() throws SQLException{
 		if(pst!=null){

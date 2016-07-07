@@ -19,7 +19,6 @@ public class teacherDatabase {
 			pst.setString(1,id);
 			ResultSet rs=pst.executeQuery();
 			rs.next();
-			System.out.println("Teacher name "+rs.getString("T_NAME"));
 			return rs;
 		}
 	
@@ -246,6 +245,41 @@ public class teacherDatabase {
 		}
 		return false;
 	}
+	
+	public void removeFriend(String id,String hex) throws Exception{
+		String list,temp="";
+		if(hex.charAt(0)=='|'){
+			pst=con.prepareStatement("select T_TEACHERLIST from TEACHER where T_ID=?");
+			pst.setString(1,id);
+		     ResultSet rs=pst.executeQuery();
+			rs.next();
+			list=rs.getString("T_TEACHERLIST");
+		}else{
+			pst=con.prepareStatement("select T_STUDENTLIST from TEACHER where T_ID=?");
+			pst.setString(1,id);
+		     ResultSet rs=pst.executeQuery();
+			rs.next();
+			list=rs.getString("T_STUDENTLIST");
+			
+		}
+		for(int i=0;i<list.length();i=i+4){
+			if(!list.substring(i,i+4).equals(hex)){
+			temp=temp+list.substring(i,i+4);
+		}
+		}
+		if(hex.charAt(0)=='|'){
+		pst=con.prepareStatement("update TEACHER set T_TEACHERLIST=? where T_ID=?");
+		}else{
+			pst=con.prepareStatement("update TEACHER set t_STUDENTLIST=? where T_ID=?");
+		}
+		System.out.println("After Removing "+hex+" from "+ temp);
+		pst.setString(1, temp);
+		pst.setString(2,id);		
+		int result=pst.executeUpdate();
+		System.out.println(result+" Records Affected.");
+		
+	}
+	
 	
 	
 	

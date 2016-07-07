@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<% String id="8";
+<% String id="";
 
 System.out.println("profile is "+request.getAttribute("profile"));
 if(request.getAttribute("profile")!=null){

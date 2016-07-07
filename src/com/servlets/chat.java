@@ -26,20 +26,20 @@ public class chat extends HttpServlet {
 		chatDatabase cd=null;
 		chatRoomDatabase crd=null;
 		decodingStudent ds=null;
-		RequestDispatcher rd=request.getRequestDispatcher("chatScreen.jsp");
-		try {
 		
+		try {
+			
 			HttpSession s=request.getSession(false);
 			String whichForm=request.getParameter("whichForm");
 			 id=request.getParameter("id");
+			 //RequestDispatcher rd=request.getRequestDispatcher("chatScreen.jsp?cid="+id);
 			if(whichForm.equals("sendmessage")){
 				cd=new chatDatabase();
 				String msg=request.getParameter("message");
 				if(!msg.equals("")){
 				cd.addMessage(id, msg,s.getAttribute("id").toString());
 				}
-				
-				rd.forward(request, response);
+				response.sendRedirect("chatScreen.jsp?cid="+id);
 				
 			}else{
 				String options=request.getParameter("options");
@@ -48,20 +48,20 @@ public class chat extends HttpServlet {
 				if(options.equals("add")){
 					System.out.println("Adding member "+mem+" to chat id "+id);
 					crd.addMemberToChat(mem,id);
-					rd.forward(request, response);
+					response.sendRedirect("chatScreen.jsp?cid="+id);
 				}else if(options.equals("delete")){
-					crd.removeMember(mem, id);
+					crd.removeMember(id,mem);
 					System.out.println("Removing member "+mem+" to chat id "+id);
-					rd.forward(request, response);
+					response.sendRedirect("chatScreen.jsp?cid="+id);
 				}
 				else{
 					ds=new decodingStudent();
 					if(s.getAttribute("id").toString().charAt(0)=='|'){
-						crd.removeMember(s.getAttribute("id").toString(), id);
+						crd.removeMember(id,s.getAttribute("id").toString());
 						request.setAttribute("profile","teacher");
 						response.sendRedirect("teacherProfile.jsp");
 					}else{
-					crd.removeMember(ds.rollToHex(s.getAttribute("id").toString()), id);
+					crd.removeMember(id,ds.rollToHex(s.getAttribute("id").toString()));
 					request.setAttribute("profile","student");
 					response.sendRedirect("studentProfile.jsp");
 					}

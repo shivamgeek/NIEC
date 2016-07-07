@@ -6,13 +6,19 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 </head>
- 
-
-
-<iframe src="chat.jsp" height="400px" width="100%" ></iframe>
-<!-- <iframe src="enterChat.jsp" height="100px" width="100%"></iframe> -->
-<% String id="8";
+ <% String id="";
+try{
+id=request.getParameter("cid");
+System.out.println("Value of cid is "+id);
+}catch(Exception e){
+	out.println("Some Problem with the URL");e.printStackTrace();
+	}try{
 %>
+
+
+<iframe src="chat.jsp?cid=<%=id %>" height="400px" width="100%" ></iframe>
+<!-- <iframe src="enterChat.jsp" height="100px" width="100%"></iframe> -->
+
 
 <form action="chat">
 <input type="hidden" name="id" value="<%=id%>">
@@ -33,9 +39,18 @@
 </select>
 <input type="text" name="mem">&nbsp
 <input type="submit">
-</form>
+</form><br>
+<%
+HttpSession s=request.getSession(false);
+if(s.getAttribute("id").toString().charAt(0)=='|'){ %>
+<a href="teacherProfile.jsp">Go to PROFILE</a>
+
+<%}else{ %>
+<a href="studentProfile.jsp">Go to PROFILE</a>
+<%} %>
+
 MemberList-<br>
-<%try{
+<%
 chatDatabase cd=new chatDatabase();
 decodingStudent ds=new decodingStudent();
 studentDatabase sd=new studentDatabase();

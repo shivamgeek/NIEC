@@ -18,8 +18,9 @@ Enter Member Hexcode<input type="text" name="mlist" value="<%=s.getAttribute("he
 
 <%
 if(request.getAttribute("group")!=null){
+	System.out.println("attribute is "+request.getAttribute("group"));
 	%>Enter Group Name also-<br>
-<form>
+<form action="insertChatRoom">
 Enter Group Name<input type="text" name="gname"><br>
 <input type="submit" value="Enter Group Name"><br>
 <input type="hidden" value="group" name="h">

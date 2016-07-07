@@ -40,7 +40,6 @@ public class studentDatabase {
 
 		pst=con.prepareStatement("select S_OTHERFRIENDLIST from STUDENT_"+branch+" where S_ROLL=?");
 		pst.setString(1,roll);
-		System.out.println("Roll2- "+roll);
 		ResultSet rs=pst.executeQuery();
 		rs.next();
 		/*String list="";
@@ -265,7 +264,6 @@ public class studentDatabase {
 
 		pst=con.prepareStatement("select S_CLASSFRIENDS from CLASSINFO where S_BRANCH=? and S_SECTION=?");
 		pst.setString(1,branch);
-		System.out.println("Roll1- "+roll);
 		pst.setString(2,section);
 		ResultSet rs=pst.executeQuery();
 		rs.next();
@@ -468,6 +466,54 @@ public class studentDatabase {
 		}
 		return false;
 	}
+	
+	
+	public void removeFriend(String roll,String hex) throws Exception{
+		String branch=ds.branchName(ds.findBranchFromRoll(roll));
+		String list,temp="";
+		if(hex.charAt(0)=='|'){
+			pst=con.prepareStatement("select S_TEACHERLIST from STUDENT_"+branch+" where S_ROLL=?");
+			pst.setString(1,roll);
+		     ResultSet rs=pst.executeQuery();
+			rs.next();
+			list=rs.getString("S_TEACHERLIST");
+		}else{
+			pst=con.prepareStatement("select S_OTHERFRIENDLIST from STUDENT_"+branch+" where S_ROLL=?");
+			pst.setString(1,roll);
+		     ResultSet rs=pst.executeQuery();
+			rs.next();
+			list=rs.getString("S_OTHERFRIENDLIST");
+			
+		}
+		for(int i=0;i<list.length();i=i+4){
+			if(!list.substring(i,i+4).equals(hex)){
+			temp=temp+list.substring(i,i+4);
+		}
+		}
+		if(hex.charAt(0)=='|'){
+		pst=con.prepareStatement("update STUDENT_"+branch+" set S_TEACHERLIST=? where S_ROLL=?");
+		}else{
+			pst=con.prepareStatement("update STUDENT_"+branch+" set S_OTHERFRIENDLIST=? where S_ROLL=?");
+		}
+		System.out.println("After Removing "+hex+" from "+ temp);
+		
+		pst.setString(1, temp);
+		pst.setString(2,roll);		
+		int result=pst.executeUpdate();
+		System.out.println(result+" Records Affected.");
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

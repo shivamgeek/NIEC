@@ -13,10 +13,11 @@ public class teacher {
 	public decodingStudent ds;
 	public noticeDatabase nd;
 	public studentDatabase sd;
-	
+	public chatRoomDatabase cd;
 	
 	public teacher(String id) throws Exception{
 		sd=new studentDatabase();
+		cd=new chatRoomDatabase();
 		acd=new achievementDatabase();
 		nd=new noticeDatabase();
 		ds=new decodingStudent();
@@ -106,6 +107,12 @@ public class teacher {
 		if(acd!=null){
 			acd.closeConnection();
 		}
+if(cd!=null){
+			
+			cd.closeConnection();
+		}
+		
+		
 	
 	}
 	
