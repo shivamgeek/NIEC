@@ -54,9 +54,11 @@ public class teacherMarks extends HttpServlet {
 		
 		if(radio.equals("insert")){
 		md.insertMarks(temp,sem,roll,branch);
+		response.sendRedirect("teacherMarks.jsp");
 		}
 		else{
 			md.updateMarks(temp, roll, branch, sem);
+			response.sendRedirect("teacherMarks.jsp");
 		}
 		
 
@@ -66,6 +68,7 @@ public class teacherMarks extends HttpServlet {
 		}catch(Exception e){
 			PrintWriter p=response.getWriter();
 			p.println("Some error occured in getting data");
+			response.sendRedirect("teacherMarks.jsp");
 			e.printStackTrace();
 		}
 		finally{

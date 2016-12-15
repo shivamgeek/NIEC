@@ -35,7 +35,8 @@ public class chatRoomDatabase {
 		pst=con.prepareStatement("select CHATID from CHATROOMS order by CHATID desc limit 1");
 		ResultSet rs=pst.executeQuery();
 		rs.next();
-		String id1= rs.getString("CHATID"),sub="";;
+		String id1= rs.getString("CHATID"),sub="";
+		try{
 		for(int i=0;i<memberList.length();i=i+4){
 			sub=memberList.substring(i,i+4);
 			addChatIdToMember(sub,id1);
@@ -43,6 +44,10 @@ public class chatRoomDatabase {
 		pst=con.prepareStatement("create table CHAT_"+id1+" (MID int(10) auto_increment primary key,MESSAGE varchar(500),SENDER varchar(30),TIME DATETIME); ");
 		 result=pst.executeUpdate();
 		System.out.println(result +" Records Affected");
+		}catch(Exception e){
+			delete(id1);
+			return id1;
+		}
 		
 		return id1;
 	}
@@ -89,6 +94,24 @@ public class chatRoomDatabase {
 		}
 		
 	}
+	
+	public void delete(String id) throws SQLException{
+		
+			pst=con.prepareStatement("delete from CHATROOMS where CHATID=?");
+			pst.setString(1, id);
+			int result=pst.executeUpdate();
+			System.out.println(result +" Records Affected");
+			pst=con.prepareStatement("drop table CHAT_"+id);
+			 result=pst.executeUpdate();
+			System.out.println(result +" Records Affected");
+		
+		
+	}
+	
+	
+	
+	
+	
 	
 	public void removeMember(String id,String hex) throws Exception{
 

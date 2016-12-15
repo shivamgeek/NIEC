@@ -505,7 +505,11 @@ public class studentDatabase {
 	}
 	
 	
-	
+	public ResultSet all(String branch) throws SQLException{
+		pst=con.prepareStatement("select * from STUDENT_"+branch+" ");
+		ResultSet rs=pst.executeQuery();
+		return rs;
+	}
 	
 	
 	

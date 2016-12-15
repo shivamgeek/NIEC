@@ -5,9 +5,11 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
 </head>
-<body>
-
+<body >
+<h1>Mark Sheet</h1><br><br>
+<a href="teacherProfile.jsp">My Profile</a>
 <% try{
 	HttpSession se=request.getSession(false);
 	String roll=se.getAttribute("id").toString();
@@ -20,7 +22,7 @@ HashMap<String,String[]> hm1=new HashMap<String,String[]>();
  String subjects[]=hm1.get("subject");
  String codes[]=hm1.get("codes");
  String marksCodes[]=hm1.get("marks");
- %><table border="5">
+ %><table border="5" align="center">
  <tr><th>Subject</th><th>Code</th><th>Insert/Update</th></tr>
  <%
  for(int i=0;i<marksCodes.length&&(subjects.length==marksCodes.length);i++){   %>

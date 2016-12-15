@@ -4,19 +4,20 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Insert title here</title>
+<title>Login Page</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
 </head>
-<body>
-<h3>Login</h3><br>
-<form action="login">
+<body background="loginPic.jpg">
+<h1>Login</h1><br>
+<form align="center" action="login">
 <select name="whos">
 <option value="Student">Student</option>
 <option value="Teacher">Teacher</option>
 <option value="Admin">Admin</option>
 </select><br>
 
-Enter Roll<input type="text" name="id"><br>
-Enter Password<input type="text" name="pass"><br>
+<div id="prop">Enter ID</div><input style="background-color: #0C0E15; color: #FFFFFF" type="text" name="id"><br>
+<div id="prop">Enter Password</div><input style="background-color: #0C0E15; color: #FFFFFF" type="password" name="pass"><br><br>
 <input type="submit">
 </form>
 

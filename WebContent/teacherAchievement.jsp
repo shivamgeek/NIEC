@@ -5,12 +5,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
 </head>
-<body>
+<a href="teacherProfile.jsp">My Profile</a><br>
+<body bgcolor="#C5D5E5">
 <form action="insertAchievement" method="GET">
-content<input type="text" name="content" /><br />
-Student Roll Number<input type="text" name="student" /><br />
-Insert<input type="radio" name="choice" value="insert" /><br>
+<center><h1>Student Achievement</h1></center>
+<span id="prop">Enter Achievement</span><input type="text" name="content" /><br />
+<span id="prop">Student Roll Number</span><input type="text" name="student" /><br />
+<!-- <span id="prop">Insert</span><input type="radio" name="choice" value="insert" /><br> -->
 <input type="submit" value="Submit" />
 </form>
 

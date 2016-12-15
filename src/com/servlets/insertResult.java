@@ -47,6 +47,7 @@ public class insertResult extends HttpServlet {
 		md=new marksDatabase();
 		if(radio.equals("insert")){
 			md.insertMarks(values[3],sem,roll, branch);
+			response.sendRedirect("teacherProfile.jsp");
 		}
 		else if(radio.equals("show")){
 			String t=md.showMarksCode(roll, branch);
@@ -57,7 +58,9 @@ public class insertResult extends HttpServlet {
 		}
 	     }catch(Exception e5){
 	    	 PrintWriter p=response.getWriter();
+	    	 
 				p.println("Some error occured in getting data");
+				response.sendRedirect("teacherProfile.jsp");
 	    	 e5.printStackTrace();
 	     }
 		}

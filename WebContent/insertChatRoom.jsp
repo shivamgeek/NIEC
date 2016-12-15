@@ -5,13 +5,24 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
+
 </head>
 <body>
 <form action="insertChatRoom">
 <%
 HttpSession s=request.getSession(false);
-%>
-Enter Member Hexcode<input type="text" name="mlist" value="<%=s.getAttribute("hex")!=null?s.getAttribute("hex"):""%>"><br>
+
+if(s.getAttribute("id").toString().charAt(0)=='|'){ %>
+<a href="teacherProfile.jsp">Homepage</a>
+
+<%}else{ %>
+<a href="studentProfile.jsp">Homepage</a>
+<%} %>
+<br><br>
+
+
+<h2>Enter Member Hexcode</h2><input type="text" name="mlist" value="<%=s.getAttribute("hex")!=null?s.getAttribute("hex"):""%>"><br>
 <input type="submit" value="Create Chat Room"><br>
 <input type="hidden" value="member" name="h"><br>
 </form>
@@ -19,9 +30,9 @@ Enter Member Hexcode<input type="text" name="mlist" value="<%=s.getAttribute("he
 <%
 if(request.getAttribute("group")!=null){
 	System.out.println("attribute is "+request.getAttribute("group"));
-	%>Enter Group Name also-<br>
+	%>Enter Group Name also<br>
 <form action="insertChatRoom">
-Enter Group Name<input type="text" name="gname"><br>
+<h2>Enter Group Name</h2><input type="text" name="gname"><br>
 <input type="submit" value="Enter Group Name"><br>
 <input type="hidden" value="group" name="h">
 </form>	

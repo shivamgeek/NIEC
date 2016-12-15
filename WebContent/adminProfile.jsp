@@ -5,9 +5,10 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
 </head>
 <body>
-<h3>Welcome Admin</h3>
+<h1>Welcome Admin</h1>
 <form action="insertStudent.jsp">
 <input type="submit" value="Insert Student"> </form>
 <form action="insertTeacher.jsp">

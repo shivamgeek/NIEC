@@ -5,10 +5,13 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
 </head>
-<body>
-Enter Student Roll<form action="teacherMarks"><input type="text" name="roll">
+<body bgcolor="#C5D5E5">
+<a href="teacherProfile.jsp">My Profile</a><br>
+<span id="prop">Enter Student Roll</span><form action="teacherMarks"><input type="text" name="roll"><br>
 <input type="hidden" name="formType" value="insertForm">
+<span id="prop">Branch</span><br>
 <select name="branch">
 <option value="CSE">CSE </option>
 <option value="EEE"> EEE</option>
@@ -16,8 +19,8 @@ Enter Student Roll<form action="teacherMarks"><input type="text" name="roll">
 <option value="CIV"> CIVIL</option>
 <option value="IT_"> IT</option>
 <option value="MEC">MECH</option>
-</select>
-Semester<select name="semester">
+</select><br>
+<span id="prop">Semester</span><br><select name="semester">
 <option value="1">1 </option>
 <option value="2">2</option>
 <option value="3">3</option>
@@ -47,7 +50,7 @@ String len=marksCodes.length+"";
 
 
 </form><br><br>
-<h3>MARKS</h3>
+<h2>MARKS</h2>
 <table border="5">
 
 <tr><th>Subject</th><th>Code</th><th>Insert/Update</th></tr>
@@ -65,7 +68,7 @@ for(int i=0;i<marksCodes.length&&(subjects.length==marksCodes.length);i++){   %>
 	} %>
 
 </table>
-Update<input type="radio" name="choice" value="update" /><br>
+<span id="prop">Update</span><input type="radio" name="choice" value="update" /><br><br>
 
 <input type="submit"></form> 
 <% s.closeConnection();

@@ -5,8 +5,14 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
 </head>
-<body>
+<body >
+
+FILE NOT TO BE USED.
+Instead use chatScreen.jsp.
+(Lower portion of chatScreen.jsp)
+
 <% String id="";
 
 System.out.println("profile is "+request.getAttribute("profile"));
@@ -35,7 +41,7 @@ if(request.getAttribute("profile")!=null){
 <input type="text" name="mem">&nbsp
 <input type="submit">
 </form>
-MemberList-<br>
+<h2>MemberList</h2></h2><br>
 <%try{
 chatDatabase cd=new chatDatabase();
 decodingStudent ds=new decodingStudent();

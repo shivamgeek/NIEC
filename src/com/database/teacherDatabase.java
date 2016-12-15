@@ -158,6 +158,8 @@ public class teacherDatabase {
 		rs.next();
 		String sno=rs.getString("SNO");
 		System.out.println("Sno is."+sno);
+		if(Integer.parseInt(sno)<100)
+			sno=Integer.parseInt(sno)+100+"";
 		String t_id="|"+sno;
 		String sql="update TEACHER set T_ID=? where SNO=?";
 		
@@ -280,6 +282,12 @@ public class teacherDatabase {
 		
 	}
 	
+
+	public ResultSet all() throws SQLException{
+		pst=con.prepareStatement("select * from TEACHER");
+		ResultSet rs=pst.executeQuery();
+		return rs;
+	}
 	
 	
 	

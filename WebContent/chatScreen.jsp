@@ -5,6 +5,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="styling.css">
 </head>
  <% String id="";
 try{
@@ -15,11 +16,12 @@ System.out.println("Value of cid is "+id);
 	}try{
 %>
 
-
-<iframe src="chat.jsp?cid=<%=id %>" height="400px" width="100%" ></iframe>
+<!-- Main screen for chat to be shown to the user
+ -->
+<iframe src="chat.jsp?cid=<%=id %>" height="400px" width="100%" ></iframe>  
 <!-- <iframe src="enterChat.jsp" height="100px" width="100%"></iframe> -->
 
-
+<body >
 <form action="chat">
 <input type="hidden" name="id" value="<%=id%>">
 <input type="hidden" name="whichForm" value="sendmessage">
@@ -32,7 +34,7 @@ System.out.println("Value of cid is "+id);
 <form action="chat">
 <input type="hidden" name="id" value="<%=id%>">
 <input type="hidden" name="whichForm" value="memberOptions">
-<select name="options">
+<select name="options">    <!-- to add,delete member and leave group -->
 <option value="add">Add New Member</option>
 <option value="delete">Remove a Member</option>
 <option value="leave">Leave Group</option>
@@ -49,7 +51,7 @@ if(s.getAttribute("id").toString().charAt(0)=='|'){ %>
 <a href="studentProfile.jsp">Go to PROFILE</a>
 <%} %>
 
-MemberList-<br>
+<h2>MemberList</h2>   <!-- To show memberlist -->
 <%
 chatDatabase cd=new chatDatabase();
 decodingStudent ds=new decodingStudent();
@@ -61,14 +63,14 @@ ResultSet rs;String roll;
 for(int i=0;i<list.length();i=i+4){
 	if(list.substring(i,i+4).charAt(0)=='|'){
 		rs=td.fetchAll(list.substring(i,i+4));
-		%>
-		<%=rs.getString("T_NAME") %><br>
+		%><span id="val">
+		<%=rs.getString("T_NAME") %></span><br>
 <%		
 	}else{
 	roll=ds.hexToRoll(list.substring(i,i+4));
 rs=sd.fetchAll(roll,ds.branchName(ds.findBranchFromRoll(roll)));
-	%>
-	<%=rs.getString("S_NAME") %><br>
+	%><span id="val">
+	<%=rs.getString("S_NAME") %></span><br>
 <%	
 }
 }}catch(Exception e){
@@ -79,7 +81,7 @@ rs=sd.fetchAll(roll,ds.branchName(ds.findBranchFromRoll(roll)));
 %>
 
 
-
+</body>
 
 
 </html>

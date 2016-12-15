@@ -5,8 +5,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
+
 </head>
-<body>
+<body bgcolor="#C5D5E5">
 <form action="insertNotice" method="GET">
 
 content<input type="text" name="content" /><br />

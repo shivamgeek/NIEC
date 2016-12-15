@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Insert title here</title>
 </head>
-<body>
+<body bgcolor="#C5D5E5">
 <form action="insertAcademics">
 <select name="branch">
 <option value="CSE">CSE </option>

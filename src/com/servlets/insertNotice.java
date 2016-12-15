@@ -46,10 +46,11 @@ public class insertNotice extends HttpServlet {
 		for(int i=0;i<length;i++){
 			values[i]=request.getParameter(e.nextElement());
 			}
-		
+		radio="insert";
 			nd=new noticeDatabase();
 			if(radio.equals("insert")){
 				nd.addNotice(values[0],s.getAttribute("id").toString()+s.getAttribute("name").toString(),values[1],approve);
+				response.sendRedirect("teacherProfile.jsp");
 			}
 			else if(radio.equals("delete")){
 				nd.deleteNotice(values[4]);
@@ -61,10 +62,12 @@ public class insertNotice extends HttpServlet {
 		 catch (SQLException e1) {
 			 PrintWriter p=response.getWriter();
 				p.println("Some error occured in getting data");
+				response.sendRedirect("teacherProfile.jsp");
 			e1.printStackTrace();
 		} catch (ClassNotFoundException e1) {
 			PrintWriter p=response.getWriter();
 			p.println("Some error occured in getting data");
+			response.sendRedirect("teacherProfile.jsp");
 			e1.printStackTrace();
 		};
 	

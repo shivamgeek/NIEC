@@ -70,14 +70,18 @@ public class login extends HttpServlet {
 					 rd=request.getRequestDispatcher("login.jsp");
 					rd.include(request, response);
 				}
-			}else{
+			}else if(id.equals("admin") && pass.equals("admin")){
 				rd=request.getRequestDispatcher("adminProfile.jsp");
+				rd.include(request, response);
+			}else{
+				p.println("Invalid Admin ID or Password");
+				 rd=request.getRequestDispatcher("login.jsp");
 				rd.include(request, response);
 			}
 			
 				
 		} catch (Exception e) {
-			p.println("Invalid ID or Password");
+			p.println("<b><font color='red'>Invalid ID or Password</font></b>");
 			System.out.println("login.java catch");
 			rd=request.getRequestDispatcher("login.jsp");
 			rd.include(request, response);

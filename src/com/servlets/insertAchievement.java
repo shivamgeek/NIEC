@@ -43,11 +43,12 @@ public class insertAchievement extends HttpServlet {
 		for(int i=0;i<length;i++){
 			values[i]=request.getParameter(e.nextElement());
 			}
-		
+		radio="insert";
 			achievementDatabase ad=new achievementDatabase();
 			//ad=new noticeDatabase();
 			if(radio.equals("insert")){
 				ad.addAchievement(values[0],s.getAttribute("id")+" "+s.getAttribute("name"),values[1]);
+				response.sendRedirect("teacherProfile.jsp");
 			}
 			else if(radio.equals("delete")){
 				ad.removeAchievement(aid);
@@ -57,10 +58,12 @@ public class insertAchievement extends HttpServlet {
 		 catch (SQLException e1) {
 			 PrintWriter p=response.getWriter();
 				p.println("Some error occured in getting data");
+				response.sendRedirect("teacherProfile.jsp");
 			e1.printStackTrace();
 		} catch (ClassNotFoundException e1) {
 			PrintWriter p=response.getWriter();
 			p.println("Some error occured in getting data");
+			response.sendRedirect("teacherProfile.jsp");
 			e1.printStackTrace();
 		}
 		
